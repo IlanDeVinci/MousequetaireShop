@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }} - Mousquetaire Shop{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="product-detail">
+        <div class="product-detail-image">
+            {% if product.imageUrl %}
+                <img src="{{ product.imageUrl }}" alt="{{ product.name }}">
+            {% else %}
+                <div class="product-placeholder-large">📦</div>
+            {% endif %}
+        </div>
+        <div class="product-detail-info">
+            <h1>{{ product.name }}</h1>
+            <p class="product-detail-price">${{ product.price|number_format(2) }}</p>
+            <p class="product-detail-description">{{ product.description }}</p>
+            
+            <div class="product-meta">
+                <p><strong>Stock:</strong> {{ product.stock }} available</p>
+                {% if product.category %}
+                    <p><strong>Category:</strong> {{ product.category.name }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="product-actions">
+                {% if is_granted('ROLE_USER') %}
+                    <button class="btn btn-large">Add to Cart</button>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="btn btn-large">Login to Purchase</a>
+                {% endif %}
+                <a href="{{ path('app_products') }}" class="btn btn-secondary">Back to Products</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

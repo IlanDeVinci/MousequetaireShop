@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Products - Mousquetaire Shop{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div class="container">
+        <h1>Our Products</h1>
+        <p>Browse our collection of amazing products</p>
+    </div>
+</div>
+
+<div class="container">
+    {% if products is empty %}
+        <div class="empty-state">
+            <h2>No products available yet</h2>
+            <p>Check back soon for new items!</p>
+        </div>
+    {% else %}
+        <div class="product-grid">
+            {% for product in products %}
+                <div class="product-card">
+                    <div class="product-image">
+                        {% if product.imageUrl %}
+                            <img src="{{ product.imageUrl }}" alt="{{ product.name }}">
+                        {% else %}
+                            <div class="product-placeholder">📦</div>
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <h3>{{ product.name }}</h3>
+                        <p class="product-description">{{ product.description|slice(0, 100) }}{% if product.description|length > 100 %}...{% endif %}</p>
+                        <div class="product-footer">
+                            <span class="product-price">${{ product.price|number_format(2) }}</span>
+                            <a href="{{ path('app_product_show', {id: product.id}) }}" class="btn btn-small">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

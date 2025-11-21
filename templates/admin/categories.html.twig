@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Categories - Mousquetaire Shop{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <h2>Admin Panel</h2>
+        <nav class="admin-nav">
+            <a href="{{ path('app_admin_dashboard') }}" class="admin-nav-link">Dashboard</a>
+            <a href="{{ path('app_admin_products') }}" class="admin-nav-link">Products</a>
+            <a href="{{ path('app_admin_categories') }}" class="admin-nav-link active">Categories</a>
+            <a href="{{ path('app_admin_orders') }}" class="admin-nav-link">Orders</a>
+            <a href="{{ path('app_admin_users') }}" class="admin-nav-link">Users</a>
+        </nav>
+    </aside>
+
+    <main class="admin-content">
+        <div class="admin-header">
+            <h1>Categories Management</h1>
+        </div>
+
+        <div class="admin-table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td>{{ category.id }}</td>
+                            <td>{{ category.name }}</td>
+                            <td>{{ category.description|default('N/A') }}</td>
+                            <td>
+                                <a href="#" class="btn-link">Edit</a>
+                                <a href="#" class="btn-link btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">No categories found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}

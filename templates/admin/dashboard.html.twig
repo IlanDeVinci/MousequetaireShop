@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard - Mousquetaire Shop{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <h2>Admin Panel</h2>
+        <nav class="admin-nav">
+            <a href="{{ path('app_admin_dashboard') }}" class="admin-nav-link active">Dashboard</a>
+            <a href="{{ path('app_admin_products') }}" class="admin-nav-link">Products</a>
+            <a href="{{ path('app_admin_categories') }}" class="admin-nav-link">Categories</a>
+            <a href="{{ path('app_admin_orders') }}" class="admin-nav-link">Orders</a>
+            <a href="{{ path('app_admin_users') }}" class="admin-nav-link">Users</a>
+        </nav>
+    </aside>
+
+    <main class="admin-content">
+        <div class="admin-header">
+            <h1>Dashboard</h1>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <h3>Total Users</h3>
+                    <p class="stat-number">{{ stats.total_users }}</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-info">
+                    <h3>Total Products</h3>
+                    <p class="stat-number">{{ stats.total_products }}</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🛒</div>
+                <div class="stat-info">
+                    <h3>Total Orders</h3>
+                    <p class="stat-number">{{ stats.total_orders }}</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📁</div>
+                <div class="stat-info">
+                    <h3>Categories</h3>
+                    <p class="stat-number">{{ stats.total_categories }}</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

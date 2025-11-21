@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Products - Mousquetaire Shop{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <h2>Admin Panel</h2>
+        <nav class="admin-nav">
+            <a href="{{ path('app_admin_dashboard') }}" class="admin-nav-link">Dashboard</a>
+            <a href="{{ path('app_admin_products') }}" class="admin-nav-link active">Products</a>
+            <a href="{{ path('app_admin_categories') }}" class="admin-nav-link">Categories</a>
+            <a href="{{ path('app_admin_orders') }}" class="admin-nav-link">Orders</a>
+            <a href="{{ path('app_admin_users') }}" class="admin-nav-link">Users</a>
+        </nav>
+    </aside>
+
+    <main class="admin-content">
+        <div class="admin-header">
+            <h1>Products Management</h1>
+        </div>
+
+        <div class="admin-table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>${{ product.price|number_format(2) }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>{{ product.category ? product.category.name : 'N/A' }}</td>
+                            <td>
+                                <a href="#" class="btn-link">Edit</a>
+                                <a href="#" class="btn-link btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">No products found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}

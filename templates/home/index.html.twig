@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home - Mousquetaire Shop{% endblock %}
+
+{% block body %}
+<div class="hero">
+    <div class="container">
+        <h1>Welcome to Mousquetaire Shop</h1>
+        <p class="hero-subtitle">Discover amazing products at great prices</p>
+        <a href="{{ path('app_products') }}" class="btn btn-large">Shop Now</a>
+    </div>
+</div>
+
+<div class="container">
+    <section class="features">
+        <div class="feature-card">
+            <div class="feature-icon">🚚</div>
+            <h3>Free Shipping</h3>
+            <p>On orders over $50</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💳</div>
+            <h3>Secure Payment</h3>
+            <p>100% secure transactions</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">↩️</div>
+            <h3>Easy Returns</h3>
+            <p>30-day return policy</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎧</div>
+            <h3>24/7 Support</h3>
+            <p>Always here to help</p>
+        </div>
+    </section>
+</div>
+{% endblock %}

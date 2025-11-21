@@ -116,6 +116,16 @@ class Order
         return $this;
     }
 
+    public function getTotalPrice(): ?string
+    {
+        return $this->totalAmount;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->customer;
+    }
+
     public function getOrderItems(): Collection
     {
         return $this->orderItems;
