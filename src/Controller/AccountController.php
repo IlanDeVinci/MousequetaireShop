@@ -15,7 +15,7 @@ class AccountController extends AbstractController
     public function index(OrderRepository $orderRepository): Response
     {
         $user = $this->getUser();
-        $orders = $orderRepository->findBy(['user' => $user], ['createdAt' => 'DESC']);
+        $orders = $orderRepository->findBy(['customer' => $user], ['createdAt' => 'DESC']);
         
         return $this->render('account/index.html.twig', [
             'orders' => $orders,
