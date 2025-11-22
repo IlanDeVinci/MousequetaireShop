@@ -104,12 +104,45 @@
             margin-left: auto;
             padding: 10px;
             text-decoration: none;
+            position: relative;
         }
 
         .cart-icon img {
             width: 100%;
             height: 100%;
             object-fit: contain;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
         }
 
         /* Alerts */
@@ -200,7 +233,7 @@
 <body>
     <!-- Barre d'information supérieure -->
     <div class="top-bar">
-        {% block topbar %}Ici, texte pour des offres ou infos du style : 🚚 Livraison offerte à partir de 100€ 🚚{% endblock %}
+        {% block topbar %}{{ banner_text|default('🚚 Livraison offerte à partir de 100€ 🚚') }}{% endblock %}
     </div>
 
     <!-- Header avec navigation -->
@@ -224,6 +257,7 @@
         {% if is_granted('ROLE_USER') %}
             <a href="{{ path('app_cart') }}" class="cart-icon">
                 <img src="{{ asset('images/panier.png') }}" alt="Panier">
+                <span class="cart-badge" style="display: none;">0</span>
             </a>
         {% endif %}
     </header>

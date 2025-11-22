@@ -2,37 +2,240 @@
 
 {% block title %}Products - Mousquetaire Shop{% endblock %}
 
-{% block body %}
-<div class="page-header">
-    <div class="container">
-        <h1>Our Products</h1>
-        <p>Browse our collection of amazing products</p>
-    </div>
-</div>
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .products-page {
+            background: #bce9ff;
+            min-height: calc(100vh - 200px);
+            padding: 60px 50px;
+        }
 
-<div class="container">
+        .page-title {
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            font-size: 64px;
+            color: #0e112b;
+            text-align: center;
+            margin-bottom: 50px;
+            letter-spacing: -2.56px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: white;
+            border: 5px solid #0e112b;
+            border-radius: 22px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-image {
+            height: 250px;
+            background: #ddf4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            padding: 20px;
+        }
+
+        .product-info {
+            padding: 25px;
+        }
+
+        .product-category {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            color: #0e112b;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .product-stock {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .stock-available {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .stock-low {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .stock-out {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product-price {
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            font-size: 28px;
+            color: #0e112b;
+        }
+
+        .add-to-cart-btn {
+            background: #0e112b;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 11px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .add-to-cart-btn:hover:not(:disabled) {
+            background: #181e4b;
+            transform: scale(1.05);
+        }
+
+        .add-to-cart-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .view-details-btn {
+            background: transparent;
+            color: #0e112b;
+            border: 2px solid #0e112b;
+            padding: 10px 20px;
+            border-radius: 11px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .view-details-btn:hover {
+            background: #0e112b;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 100px 20px;
+            background: white;
+            border: 5px solid #0e112b;
+            border-radius: 22px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .empty-state h2 {
+            font-family: 'Oxanium', sans-serif;
+            font-size: 32px;
+            color: #0e112b;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="products-page">
+    <h1 class="page-title">Nos Produits</h1>
+
     {% if products is empty %}
         <div class="empty-state">
-            <h2>No products available yet</h2>
-            <p>Check back soon for new items!</p>
+            <h2>Aucun produit disponible</h2>
+            <p>Revenez bientôt pour découvrir nos nouveautés !</p>
         </div>
     {% else %}
-        <div class="product-grid">
+        <div class="products-grid">
             {% for product in products %}
                 <div class="product-card">
-                    <div class="product-image">
-                        {% if product.imageUrl %}
-                            <img src="{{ product.imageUrl }}" alt="{{ product.name }}">
-                        {% else %}
-                            <div class="product-placeholder">📦</div>
-                        {% endif %}
-                    </div>
+                    <div class="product-image">⌨️</div>
                     <div class="product-info">
-                        <h3>{{ product.name }}</h3>
-                        <p class="product-description">{{ product.description|slice(0, 100) }}{% if product.description|length > 100 %}...{% endif %}</p>
+                        <div class="product-category">{{ product.category.name }}</div>
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <p class="product-description">
+                            {{ product.description|slice(0, 120) }}{% if product.description|length > 120 %}...{% endif %}
+                        </p>
+                        
+                        <div class="product-stock">
+                            {% if product.stock > 10 %}
+                                <span class="stock-available">✓ En stock ({{ product.stock }} disponibles)</span>
+                            {% elseif product.stock > 0 %}
+                                <span class="stock-low">⚠ Stock limité ({{ product.stock }} restants)</span>
+                            {% else %}
+                                <span class="stock-out">✗ Rupture de stock</span>
+                            {% endif %}
+                        </div>
+
                         <div class="product-footer">
-                            <span class="product-price">${{ product.price|number_format(2) }}</span>
-                            <a href="{{ path('app_product_show', {id: product.id}) }}" class="btn btn-small">View Details</a>
+                            <span class="product-price">{{ product.price|number_format(2, ',', ' ') }} €</span>
+                        </div>
+                        
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            {% if is_granted('ROLE_USER') and product.stock > 0 %}
+                                <button class="add-to-cart-btn" 
+                                        data-add-to-cart
+                                        data-product-id="{{ product.id }}"
+                                        data-product-name="{{ product.name }}"
+                                        data-product-price="{{ product.price }}">
+                                    🛒 Ajouter au panier
+                                </button>
+                            {% elseif product.stock <= 0 %}
+                                <button class="add-to-cart-btn" disabled>Rupture de stock</button>
+                            {% else %}
+                                <a href="{{ path('app_login') }}" class="add-to-cart-btn" style="text-align: center; text-decoration: none;">
+                                    Connectez-vous pour acheter
+                                </a>
+                            {% endif %}
+                            <a href="{{ path('app_product_show', {id: product.id}) }}" class="view-details-btn">
+                                Détails
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -1,16 +1,31 @@
 # Mousquetaire Shop - E-commerce Platform
 
-A modern e-commerce platform built with Symfony 7.2, API Platform, and Docker. Features a REST API backend with JWT authentication, role-based access control, and a complete product management system.
+A modern e-commerce platform built with Symfony 7.2, API Platform, Docker, and GSAP animations. Features a REST API backend with JWT authentication, role-based access control, animated frontend, shopping cart, and complete admin dashboard.
 
-## Features
+## ✨ Features
 
--  **JWT Authentication** - Secure token-based authentication
--  **Role-Based Access Control** - Admin and Client user roles
--  **Product Management** - Categories, products with stock tracking
--  **Order System** - Complete order and order item management
--  **API Platform** - Auto-generated API documentation
--  **Fully Dockerized** - No local dependencies required
--  **Email Testing** - Integrated Mailpit for email testing
+### Frontend
+- 🎨 **Modern Animated UI** - GSAP-powered animations and transitions
+- 🛒 **Shopping Cart** - Full cart functionality with localStorage persistence
+- 📱 **Responsive Design** - Mobile-friendly interface
+- ⚡ **Real-time Updates** - Dynamic cart badge and notifications
+- 🎯 **Product Catalog** - Browse products with stock indicators
+
+### Backend
+- 🔐 **JWT Authentication** - Secure token-based authentication
+- 👥 **Role-Based Access Control** - Admin and Client user roles
+- 📦 **Product Management** - CRUD operations for products and categories
+- 🛍️ **Order System** - Complete order and order item management
+- 📊 **API Platform** - Auto-generated API documentation
+- 🐳 **Fully Dockerized** - No local dependencies required
+
+### Admin Dashboard
+- ✏️ **Product CRUD** - Create, edit, and delete products
+- 🏷️ **Category Management** - Organize products by categories
+- 🎨 **Banner Editor** - Update the top banner text dynamically
+- 📈 **Statistics** - Real-time dashboard with key metrics
+- 👤 **User Management** - View and manage users
+- 📋 **Order Management** - Track customer orders
 
 ## Tech Stack
 
@@ -19,8 +34,8 @@ A modern e-commerce platform built with Symfony 7.2, API Platform, and Docker. F
 - **Authentication**: JWT (lexik/jwt-authentication-bundle)
 - **Web Server**: Nginx
 - **PHP**: 8.3 with FPM
+- **Frontend**: GSAP 3.x, Vanilla JavaScript
 - **Node.js**: 20.x (for asset management)
-- **Email Testing**: Mailpit
 
 ## Prerequisites
 

@@ -2,54 +2,158 @@
 
 {% block title %}Admin Dashboard - Mousquetaire Shop{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .admin-page {
+            background: #bce9ff;
+            min-height: calc(100vh - 200px);
+        }
+
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+        }
+
+        .admin-sidebar {
+            background: #181e4b;
+            padding: 30px 20px;
+            min-height: calc(100vh - 114px);
+        }
+
+        .admin-sidebar h2 {
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .admin-nav-link {
+            padding: 12px 20px;
+            border-radius: 11px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .admin-nav-link:hover,
+        .admin-nav-link.active {
+            background: white;
+            color: #181e4b;
+        }
+
+        .admin-content {
+            padding: 40px;
+        }
+
+        .admin-title {
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            font-size: 36px;
+            color: #0e112b;
+            margin-bottom: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 5px solid #0e112b;
+            border-radius: 22px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 50px;
+        }
+
+        .stat-info h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            font-size: 36px;
+            color: #0e112b;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-<div class="admin-layout">
-    <aside class="admin-sidebar">
-        <h2>Admin Panel</h2>
-        <nav class="admin-nav">
-            <a href="{{ path('app_admin_dashboard') }}" class="admin-nav-link active">Dashboard</a>
-            <a href="{{ path('app_admin_products') }}" class="admin-nav-link">Products</a>
-            <a href="{{ path('app_admin_categories') }}" class="admin-nav-link">Categories</a>
-            <a href="{{ path('app_admin_orders') }}" class="admin-nav-link">Orders</a>
-            <a href="{{ path('app_admin_users') }}" class="admin-nav-link">Users</a>
-        </nav>
-    </aside>
+<div class="admin-page">
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <h2>Admin Panel</h2>
+            <nav class="admin-nav">
+                <a href="{{ path('app_admin_dashboard') }}" class="admin-nav-link active">📊 Dashboard</a>
+                <a href="{{ path('app_admin_products') }}" class="admin-nav-link">📦 Produits</a>
+                <a href="{{ path('app_admin_categories') }}" class="admin-nav-link">🏷️ Catégories</a>
+                <a href="{{ path('app_admin_orders') }}" class="admin-nav-link">🛒 Commandes</a>
+                <a href="{{ path('app_admin_users') }}" class="admin-nav-link">👥 Utilisateurs</a>
+                <a href="{{ path('app_admin_banner_edit') }}" class="admin-nav-link">🎨 Bandeau</a>
+            </nav>
+        </aside>
 
-    <main class="admin-content">
-        <div class="admin-header">
-            <h1>Dashboard</h1>
-        </div>
+        <main class="admin-content">
+            <h1 class="admin-title">Tableau de Bord</h1>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">👥</div>
-                <div class="stat-info">
-                    <h3>Total Users</h3>
-                    <p class="stat-number">{{ stats.total_users }}</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3>Utilisateurs</h3>
+                        <p class="stat-number">{{ stats.total_users }}</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-info">
+                        <h3>Produits</h3>
+                        <p class="stat-number">{{ stats.total_products }}</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛒</div>
+                    <div class="stat-info">
+                        <h3>Commandes</h3>
+                        <p class="stat-number">{{ stats.total_orders }}</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📁</div>
+                    <div class="stat-info">
+                        <h3>Catégories</h3>
+                        <p class="stat-number">{{ stats.total_categories }}</p>
+                    </div>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">📦</div>
-                <div class="stat-info">
-                    <h3>Total Products</h3>
-                    <p class="stat-number">{{ stats.total_products }}</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">🛒</div>
-                <div class="stat-info">
-                    <h3>Total Orders</h3>
-                    <p class="stat-number">{{ stats.total_orders }}</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">📁</div>
-                <div class="stat-info">
-                    <h3>Categories</h3>
-                    <p class="stat-number">{{ stats.total_categories }}</p>
-                </div>
-            </div>
-        </div>
-    </main>
+        </main>
+    </div>
 </div>
 {% endblock %}

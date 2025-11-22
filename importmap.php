@@ -16,4 +16,7 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'gsap' => [
+        'version' => '3.13.0',
+    ],
 ];
