@@ -22,6 +22,10 @@ RUN mkdir -p /etc/apt/keyrings && \
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_pgsql intl zip opcache
 
+# Install php-fpm-healthcheck
+RUN curl -o /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/realestate-com-au/php-fpm-healthcheck/master/php-fpm-healthcheck \
+    && chmod +x /usr/local/bin/php-fpm-healthcheck
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
