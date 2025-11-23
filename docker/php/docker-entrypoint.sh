@@ -26,19 +26,5 @@ if [ -f "composer.json" ] && [ ! -d "vendor" ]; then
     composer install --no-interaction --prefer-dist --optimize-autoloader
 fi
 
-# Run migrations
-if [ -f "bin/console" ]; then
-    echo "Running database migrations..."
-    php bin/console doctrine:migrations:migrate --no-interaction 2>&1 || true
-    echo "Migrations complete!"
-    
-    # Fix permissions after any file changes
-    echo "Fixing permissions..."
-    chown -R www-data:www-data var 2>/dev/null || true
-    echo "Permissions fixed!"
-else
-    echo "Skipping migrations - bin/console not found"
-fi
-
 echo "Starting PHP-FPM..."
 exec docker-php-entrypoint php-fpm

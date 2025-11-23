@@ -28,10 +28,10 @@ services:
       DATABASE_URL: postgresql://app:app@database:5432/app
     healthcheck:
       test: ["CMD-SHELL", "pidof php-fpm > /dev/null || exit 1"]
-      interval: 5s
+      interval: 3s
       timeout: 3s
-      retries: 10
-      start_period: 40s
+      retries: 20
+      start_period: 15s
 
   nginx:
     image: nginx:alpine

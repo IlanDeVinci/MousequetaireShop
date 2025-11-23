@@ -1,4 +1,3 @@
-import "./styles/app.css";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -23,6 +22,75 @@ document.addEventListener("cart-updated", () => {
   updateCartDisplay();
 });
 
+// Infinite diagonal scrolling grid for hero section
+function initInfiniteGrid() {
+  const gridContainer = document.getElementById("hero-grid");
+  if (!gridContainer) return;
+
+  // Image paths using Symfony asset() function - will be set from template
+  const images = [
+    gridContainer.dataset.grosseImage || "/images/grosse_touche.png",
+    gridContainer.dataset.petiteImage || "/images/petite_touche.png",
+  ];
+
+  // Calculate how many items we need to fill the grid
+  const itemsPerRow = 12;
+  const itemsPerCol = 12;
+  const totalItems = itemsPerRow * itemsPerCol;
+
+  // Populate grid with alternating images
+  for (let i = 0; i < totalItems; i++) {
+    const gridItem = document.createElement("div");
+    gridItem.className = "grid-item";
+
+    // Alternate between grosse and petite touches
+    const imageIndex = i % 2 === 0 ? 0 : 1;
+
+    const img = document.createElement("img");
+    img.src = images[imageIndex];
+    img.alt = imageIndex === 0 ? "Grosse touche" : "Petite touche";
+
+    gridItem.appendChild(img);
+    gridContainer.appendChild(gridItem);
+  }
+
+  // Calculate grid dimensions
+  const cellSize = 150;
+  const gap = 40;
+  const totalCellSize = cellSize + gap;
+
+  // Position grid to start off-screen top-left
+  const startX = -(totalCellSize * 4);
+  const startY = -(totalCellSize * 4);
+
+  gsap.set(gridContainer, {
+    x: startX,
+    y: startY,
+  });
+
+  // Animate diagonally (down-right) infinitely
+  // Move by exactly the pattern repeat distance for seamless loop
+  const moveDistance = totalCellSize * 2;
+
+  gsap.to(gridContainer, {
+    x: startX + moveDistance,
+    y: startY + moveDistance,
+    duration: 20,
+    ease: "none",
+    repeat: -1,
+    modifiers: {
+      x: (x) => {
+        const offset = parseFloat(x) - startX;
+        return startX + (offset % moveDistance);
+      },
+      y: (y) => {
+        const offset = parseFloat(y) - startY;
+        return startY + (offset % moveDistance);
+      },
+    },
+  });
+}
+
 function initAnimations() {
   // Animate hero content on page load
   const heroContent = document.querySelector(".hero-content");
@@ -36,19 +104,8 @@ function initAnimations() {
     });
   }
 
-  // Animate keyboard icons
-  const keyboardIcons = document.querySelectorAll(".keyboard-icon");
-  if (keyboardIcons.length > 0) {
-    keyboardIcons.forEach((icon, index) => {
-      gsap.to(icon, {
-        y: "-=20",
-        duration: 3 + index * 0.2,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-    });
-  }
+  // Initialize infinite diagonal scrolling grid
+  initInfiniteGrid();
 
   // Rotate sparkles continuously
   const sparkles = document.querySelectorAll(".sparkle");

@@ -1,0 +1,255 @@
+/* Products Page Styles */
+
+.products-page {
+  background: #bce9ff;
+  min-height: calc(100vh - 200px);
+  padding: 60px 50px;
+}
+
+.page-title {
+  font-family: "Oxanium", sans-serif;
+  font-weight: 700;
+  font-size: 64px;
+  color: #0e112b;
+  text-align: center;
+  margin-bottom: 50px;
+  letter-spacing: -2.56px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.products-grid.full-view {
+  grid-template-columns: 1fr;
+  max-width: 1200px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 100px 20px;
+  background: white;
+  border: 5px solid #0e112b;
+  border-radius: 22px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.empty-state h2 {
+  font-family: "Oxanium", sans-serif;
+  font-size: 32px;
+  color: #0e112b;
+  margin-bottom: 15px;
+}
+
+.empty-state p {
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  color: #666;
+}
+
+.load-more-section {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.load-more-btn {
+  background: #0e112b;
+  color: white;
+  border: none;
+  padding: 18px 50px;
+  border-radius: 50px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.load-more-btn:hover {
+  background: #181e4b;
+  transform: scale(1.05);
+}
+
+.load-more-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.products-loader {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #0e112b;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.filter-section {
+  background: white;
+  border: 3px solid #0e112b;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 40px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filter-title {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #0e112b;
+}
+
+.filter-options {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0e112b;
+}
+
+.filter-input,
+.filter-select {
+  padding: 10px 16px;
+  border: 2px solid #0e112b;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  outline: none;
+  background: white;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  border-color: #181e4b;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.filter-btn {
+  background: #0e112b;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filter-btn:hover {
+  background: #181e4b;
+  transform: translateY(-2px);
+}
+
+.clear-filter-btn {
+  background: white;
+  color: #0e112b;
+  border: 2px solid #0e112b;
+}
+
+.clear-filter-btn:hover {
+  background: #f5f5f5;
+}
+
+.sort-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sort-group label {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: #0e112b;
+}
+
+.view-mode-btn {
+  background: transparent;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #0e112b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.view-mode-btn:hover {
+  background: rgba(14, 17, 43, 0.1);
+}
+
+.view-mode-btn.active {
+  background: #0e112b;
+  color: white;
+}
+
+.view-mode-btn svg {
+  width: 20px;
+  height: 20px;
+}

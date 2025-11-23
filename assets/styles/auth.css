@@ -1,0 +1,79 @@
+/* Authentication Pages Styles */
+
+.auth-container {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: #bce9ff;
+}
+
+.auth-card {
+  background: white;
+  border: 5px solid #0e112b;
+  border-radius: 22px;
+  padding: 50px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.auth-card h1 {
+  font-family: "Oxanium", sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  color: #0e112b;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #0e112b;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #0e112b;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #181e4b;
+  box-shadow: 0 0 0 3px rgba(14, 17, 43, 0.1);
+}
+
+.auth-footer {
+  margin-top: 25px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #666;
+}
+
+.auth-footer a {
+  color: #0e112b;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.btn-block {
+  width: 100%;
+}
