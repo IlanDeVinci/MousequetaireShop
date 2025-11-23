@@ -5,13 +5,19 @@ A modern e-commerce platform built with Symfony 7.2, API Platform, Docker, and G
 ## ✨ Features
 
 ### Frontend
-- 🎨 **Modern Animated UI** - GSAP-powered animations and transitions
+
+- 🎨 **Modern Animated UI** - GSAP-powered animations with ScrollTrigger
 - 🛒 **Shopping Cart** - Full cart functionality with localStorage persistence
 - 📱 **Responsive Design** - Mobile-friendly interface
 - ⚡ **Real-time Updates** - Dynamic cart badge and notifications
 - 🎯 **Product Catalog** - Browse products with stock indicators
+- 🔍 **Dynamic Search** - Real-time product search with instant results
+- 🧩 **Web Components** - Modern custom elements for product cards
+- ♾️ **Infinite Scroll** - Load more products dynamically
+- 🎭 **Scroll Animations** - GSAP ScrollTrigger animations on all pages
 
 ### Backend
+
 - 🔐 **JWT Authentication** - Secure token-based authentication
 - 👥 **Role-Based Access Control** - Admin and Client user roles
 - 📦 **Product Management** - CRUD operations for products and categories
@@ -20,6 +26,7 @@ A modern e-commerce platform built with Symfony 7.2, API Platform, Docker, and G
 - 🐳 **Fully Dockerized** - No local dependencies required
 
 ### Admin Dashboard
+
 - ✏️ **Product CRUD** - Create, edit, and delete products
 - 🏷️ **Category Management** - Organize products by categories
 - 🎨 **Banner Editor** - Update the top banner text dynamically
@@ -40,6 +47,7 @@ A modern e-commerce platform built with Symfony 7.2, API Platform, Docker, and G
 ## Prerequisites
 
 The only requirement is:
+
 - **Docker Desktop** installed and running
 
 Everything else runs in containers!
@@ -106,6 +114,7 @@ docker compose exec php php bin/console doctrine:fixtures:load --no-interaction
 ```
 
 This creates:
+
 - Admin user: `admin@shop.com` / `admin123`
 - Client user: `client@shop.com` / `client123`
 - 5 categories
@@ -123,6 +132,7 @@ This creates:
 ### Authentication
 
 **Login:**
+
 ```bash
 curl -X POST http://localhost:8080/api/login \
   -H "Content-Type: application/json" \
@@ -130,6 +140,7 @@ curl -X POST http://localhost:8080/api/login \
 ```
 
 Response:
+
 ```json
 {
   "token": "eyJ0eXAiOiJKV1QiLCJhbGc..."
@@ -137,6 +148,7 @@ Response:
 ```
 
 **Use the token in subsequent requests:**
+
 ```bash
 curl http://localhost:8080/api/products \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
@@ -167,11 +179,13 @@ curl -X POST http://localhost:8080/api/users \
 ## User Roles
 
 ### ROLE_USER (Clients)
+
 - Browse products and categories
 - Create and view their own orders
 - Update their own profile
 
 ### ROLE_ADMIN (Administrators)
+
 - All ROLE_USER permissions
 - Create, update, delete products
 - Create, update, delete categories
@@ -209,6 +223,7 @@ MousequetaireShop/
 ## Development Commands
 
 ### Symfony Console
+
 ```bash
 # Access Symfony console
 docker compose exec php php bin/console
@@ -224,6 +239,7 @@ docker compose exec php php bin/console make:migration
 ```
 
 ### Database Commands
+
 ```bash
 # Access PostgreSQL CLI
 docker compose exec database psql -U app -d app
@@ -236,6 +252,7 @@ docker compose exec php php bin/console doctrine:fixtures:load --no-interaction
 ```
 
 ### Docker Commands
+
 ```bash
 # View logs
 docker compose logs -f
@@ -253,25 +270,30 @@ docker compose exec php sh
 ## Troubleshooting
 
 ### Port Already in Use
+
 If port 8080 is already in use, edit `compose.yaml`:
+
 ```yaml
 nginx:
   ports:
-    - "8081:80"  # Change 8080 to any available port
+    - "8081:80" # Change 8080 to any available port
 ```
 
 ### Permission Issues (Linux/Mac)
+
 ```bash
 sudo chown -R $(id -u):$(id -g) .
 ```
 
 ### Clear All Caches
+
 ```bash
 docker compose exec php sh -c "rm -rf var/cache/* var/log/*"
 docker compose exec php php bin/console cache:clear
 ```
 
 ### JWT Keys Missing
+
 ```bash
 docker compose exec php php bin/console lexik:jwt:generate-keypair
 ```
@@ -298,10 +320,59 @@ This project is open-source and available under the MIT License.
 ## Support
 
 For issues and questions:
+
 - Check the [Symfony Documentation](https://symfony.com/doc/current/index.html)
 - Review [API Platform Documentation](https://api-platform.com/docs/)
 - Open an issue on GitHub
 
 ## Credits
 
-Built with  using Symfony, API Platform, and Docker.
+Built with ❤️ using Symfony, API Platform, Docker, and GSAP.
+
+## Recent Updates (November 22, 2025)
+
+### 🎉 Major Enhancements
+
+1. **Web Components Architecture**
+
+   - Custom `<product-card>` element with Shadow DOM
+   - Custom `<search-bar>` element for dynamic search
+   - Fully reusable and AJAX-loadable components (Shopify-style)
+
+2. **Dynamic Product Loading**
+
+   - Load more products with AJAX
+   - Filter products by stock availability
+   - Smooth GSAP animations for new content
+
+3. **Real-time Search**
+
+   - Instant search results as you type
+   - Debounced API calls (300ms)
+   - Highlighted search terms in results
+
+4. **Complete ScrollTrigger Integration**
+
+   - Product cards animate on scroll
+   - Hero section animations
+   - Footer animations
+   - Section-based triggers
+
+5. **Bug Fixes**
+   - ✅ Fixed MIME type error for JavaScript modules
+   - ✅ Fixed product images display (uploaded images now show)
+   - ✅ Fixed "Add to Cart" buttons on all pages
+   - ✅ Fixed footer styling (correct background color)
+   - ✅ Implemented missing ScrollTrigger animations
+
+### 📚 Documentation
+
+- `WEB_COMPONENTS.md` - Web Components usage guide
+- `CORRECTIONS_22NOV2025.md` - Detailed changelog
+- `GUIDE_DEMARRAGE.md` - Quick start guide (French)
+
+### 🔗 New API Endpoints
+
+- `GET /api/products/search?q={query}` - Product search
+- `GET /api/products?page={page}&limit={limit}` - Paginated products
+- `GET /api/products/filter?in_stock=true` - Filter products

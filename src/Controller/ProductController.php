@@ -19,7 +19,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/products/{id}', name: 'app_product_show')]
+    #[Route('/product/{id}', name: 'app_product_show')]
     public function show(int $id, ProductRepository $productRepository): Response
     {
         $product = $productRepository->find($id);

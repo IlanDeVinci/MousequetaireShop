@@ -62,6 +62,10 @@ class Product
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'product')]
     private Collection $orderItems;
 
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'product', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups(['product:read', 'product:write'])]
+    private Collection $medias;
+
     #[ORM\Column]
     #[Groups(['product:read', 'product:write'])]
     private ?bool $isActive = true;
@@ -69,6 +73,7 @@ class Product
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -175,5 +180,40 @@ class Product
     {
         $this->isActive = $isActive;
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): static
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+            $media->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): static
+    {
+        if ($this->medias->removeElement($media)) {
+            if ($media->getProduct() === $this) {
+                $media->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    // Legacy support - returns first media
+    public function getMedia(): ?Media
+    {
+        return $this->medias->first() ?: null;
     }
 }

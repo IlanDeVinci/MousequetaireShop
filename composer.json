@@ -17,7 +17,8 @@
         "symfony/runtime": "7.2.*",
         "symfony/security-bundle": "7.2.*",
         "symfony/webapp-pack": "*",
-        "symfony/yaml": "7.2.*"
+        "symfony/yaml": "7.2.*",
+        "vich/uploader-bundle": "*"
     },
     "config": {
         "allow-plugins": {

@@ -43,6 +43,10 @@ security:
     # API routes
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
     - { path: ^/api/docs, roles: PUBLIC_ACCESS }
+    - { path: ^/api/products/search, roles: PUBLIC_ACCESS }
+    - { path: ^/api/products/filter, roles: PUBLIC_ACCESS }
+    - { path: ^/api/products, roles: PUBLIC_ACCESS }
+    - { path: ^/api/categories, roles: PUBLIC_ACCESS }
     - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
     # Public frontend routes

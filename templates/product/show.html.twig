@@ -2,35 +2,238 @@
 
 {% block title %}{{ product.name }} - Mousquetaire Shop{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .product-detail-page {
+            background: #bce9ff;
+            min-height: calc(100vh - 200px);
+            padding: 60px 50px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-detail {
+            background: white;
+            border: 5px solid #0e112b;
+            border-radius: 22px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .product-detail-image {
+            background: #ddf4ff;
+            padding: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+        }
+
+        .product-detail-image img {
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            filter: drop-shadow(0px 20px 40px rgba(0, 0, 0, 0.3));
+        }
+
+        .product-placeholder-large {
+            font-size: 120px;
+        }
+
+        .product-detail-info {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .product-detail-info h1 {
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            color: #0e112b;
+            letter-spacing: -1.92px;
+            margin: 0;
+        }
+
+        .product-detail-price {
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            font-size: 40px;
+            color: #0e112b;
+        }
+
+        .product-detail-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .product-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .product-meta p {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .product-meta strong {
+            color: #0e112b;
+            font-weight: 600;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: auto;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border-radius: 11px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-block;
+        }
+
+        .btn-large {
+            background: #0e112b;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-large:hover:not(:disabled) {
+            background: #181e4b;
+            transform: scale(1.05);
+        }
+
+        .btn-large:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #0e112b;
+            border: 3px solid #0e112b;
+        }
+
+        .btn-secondary:hover {
+            background: #0e112b;
+            color: white;
+        }
+
+        .stock-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .stock-badge.available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .stock-badge.low {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .stock-badge.out {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail {
+                grid-template-columns: 1fr;
+            }
+
+            .product-detail-info h1 {
+                font-size: 32px;
+            }
+
+            .product-detail-price {
+                font-size: 32px;
+            }
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-<div class="container">
-    <div class="product-detail">
-        <div class="product-detail-image">
-            {% if product.imageUrl %}
-                <img src="{{ product.imageUrl }}" alt="{{ product.name }}">
-            {% else %}
-                <div class="product-placeholder-large">📦</div>
-            {% endif %}
-        </div>
-        <div class="product-detail-info">
-            <h1>{{ product.name }}</h1>
-            <p class="product-detail-price">${{ product.price|number_format(2) }}</p>
-            <p class="product-detail-description">{{ product.description }}</p>
-            
-            <div class="product-meta">
-                <p><strong>Stock:</strong> {{ product.stock }} available</p>
-                {% if product.category %}
-                    <p><strong>Category:</strong> {{ product.category.name }}</p>
+<div class="product-detail-page">
+    <div class="container">
+        <div class="product-detail">
+            <div class="product-detail-image">
+                {% if product.media and product.media.filePath %}
+                    <img src="{{ asset('uploads/' ~ product.media.filePath) }}" alt="{{ product.name }}">
+                {% else %}
+                    <div class="product-placeholder-large">⌨️</div>
                 {% endif %}
             </div>
-            
-            <div class="product-actions">
-                {% if is_granted('ROLE_USER') %}
-                    <button class="btn btn-large">Add to Cart</button>
-                {% else %}
-                    <a href="{{ path('app_login') }}" class="btn btn-large">Login to Purchase</a>
-                {% endif %}
-                <a href="{{ path('app_products') }}" class="btn btn-secondary">Back to Products</a>
+            <div class="product-detail-info">
+                <h1>{{ product.name }}</h1>
+                <p class="product-detail-price">{{ product.price|number_format(2, ',', ' ') }} €</p>
+                <p class="product-detail-description">{{ product.description }}</p>
+                
+                <div class="product-meta">
+                    <p>
+                        <strong>Stock:</strong> 
+                        {% if product.stock > 10 %}
+                            <span class="stock-badge available">✓ En stock ({{ product.stock }} disponibles)</span>
+                        {% elseif product.stock > 0 %}
+                            <span class="stock-badge low">⚠ Stock limité ({{ product.stock }} restants)</span>
+                        {% else %}
+                            <span class="stock-badge out">✗ Rupture de stock</span>
+                        {% endif %}
+                    </p>
+                    {% if product.category %}
+                        <p><strong>Catégorie:</strong> {{ product.category.name }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="product-actions">
+                    {% if is_granted('ROLE_USER') %}
+                        {% if product.stock > 0 %}
+                            <button class="btn btn-large"
+                                    data-add-to-cart
+                                    data-product-id="{{ product.id }}"
+                                    data-product-name="{{ product.name }}"
+                                    data-product-price="{{ product.price }}">
+                                🛒 Ajouter au panier
+                            </button>
+                        {% else %}
+                            <button class="btn btn-large" disabled>Rupture de stock</button>
+                        {% endif %}
+                    {% else %}
+                        <a href="{{ path('app_login') }}" class="btn btn-large">Connectez-vous pour acheter</a>
+                    {% endif %}
+                    <a href="{{ path('app_products') }}" class="btn btn-secondary">Retour aux produits</a>
+                </div>
             </div>
         </div>
     </div>

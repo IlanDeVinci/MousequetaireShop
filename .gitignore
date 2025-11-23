@@ -2,6 +2,7 @@
 /.env.local
 /.env.local.php
 /.env.*.local
+.env.prod
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
@@ -33,3 +34,8 @@ Thumbs.db
 node_modules/
 npm-debug.log
 yarn-error.log
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###

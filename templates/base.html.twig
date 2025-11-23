@@ -107,6 +107,32 @@
             position: relative;
         }
 
+        .search-icon-btn {
+            width: 54px;
+            height: 54px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 14px;
+            border: none;
+            transition: all 0.3s;
+            margin-left: auto;
+        }
+
+        .search-icon-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        .search-icon-btn svg {
+            width: 100%;
+            height: 100%;
+            stroke: #0e112b;
+        }
+
         .cart-icon img {
             width: 100%;
             height: 100%;
@@ -167,7 +193,7 @@
 
         /* Footer */
         .footer {
-            background: #0a0d22;
+            background: #0e112b;
             padding: 35px 165px;
             display: flex;
             align-items: center;
@@ -207,13 +233,32 @@
         .social-icon svg {
             width: 100%;
             height: 100%;
+            fill: white;
+            stroke: white;
         }
 
         /* Responsive */
+        @media (max-width: 1200px) {
+            .nav-button {
+                font-size: 20px;
+            }
+        }
+
         @media (max-width: 768px) {
+            .header {
+                height: auto;
+                padding: 10px 15px;
+            }
+
             .header-content {
                 flex-wrap: wrap;
                 gap: 10px;
+            }
+
+            .nav-button {
+                font-size: 16px;
+                padding: 0 12px;
+                height: 32px;
             }
 
             .footer {
@@ -228,6 +273,20 @@
 
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {{ importmap('webcomponents') }}
+        <script>
+            // Open search modal when clicking search icon
+            document.addEventListener('DOMContentLoaded', () => {
+                const searchBtn = document.getElementById('open-search-modal');
+                const searchModal = document.getElementById('search-modal');
+                
+                if (searchBtn && searchModal) {
+                    searchBtn.addEventListener('click', () => {
+                        searchModal.open();
+                    });
+                }
+            });
+        </script>
     {% endblock %}
 </head>
 <body>
@@ -253,6 +312,14 @@
             {% else %}
                 <a href="{{ path('app_login') }}" class="nav-button">Connexion</a>
             {% endif %}
+            
+            <!-- Search Icon Button -->
+            <button class="search-icon-btn" id="open-search-modal" aria-label="Rechercher">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="11" cy="11" r="8" stroke-width="2"/>
+                    <path d="M21 21l-4.35-4.35" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
         </div>
         {% if is_granted('ROLE_USER') %}
             <a href="{{ path('app_cart') }}" class="cart-icon">
@@ -262,13 +329,16 @@
         {% endif %}
     </header>
 
-    <!-- Messages flash -->
+    <!-- Search Modal -->
+    <search-modal id="search-modal"></search-modal>
+
+    <!-- Messages flash: dispatch JS events so frontend toast is used -->
     {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
+        <script>document.dispatchEvent(new CustomEvent('show-notification', { detail: { message: {{ message|json_encode|raw }} } }));</script>
     {% endfor %}
 
     {% for message in app.flashes('error') %}
-        <div class="alert alert-error">{{ message }}</div>
+        <script>document.dispatchEvent(new CustomEvent('show-notification', { detail: { message: {{ message|json_encode|raw }} } }));</script>
     {% endfor %}
 
     <!-- Contenu principal -->

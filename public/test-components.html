@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Web Components</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f5f5f5;
+        }
+
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #0e112b;
+            margin-bottom: 30px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        button {
+            background: #0e112b;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            background: #181e4b;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🧪 Test Web Components - MouseQuetaire Shop</h1>
+
+        <div>
+            <h2>Barre de recherche</h2>
+            <search-bar></search-bar>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <h2>Cartes Produits</h2>
+            <button onclick="loadTestProducts()">Charger des produits de test</button>
+            <button onclick="clearProducts()">Effacer</button>
+            <div class="products-grid" id="products-grid"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import web components
+        import './assets/controllers/product-card_controller.js';
+        import './assets/controllers/search-bar_controller.js';
+
+        // Test products
+        const testProducts = [
+            {
+                id: 1,
+                name: "Clavier Mécanique RGB",
+                price: 149.99,
+                description: "Clavier gaming avec switches Cherry MX Red, rétroéclairage RGB personnalisable et repose-poignets magnétique.",
+                stock: 15,
+                category: "Claviers",
+                image: "/uploads/test-keyboard.jpg"
+            },
+            {
+                id: 2,
+                name: "Souris Gaming Pro",
+                price: 79.99,
+                description: "Souris gaming avec capteur optique 16000 DPI, 8 boutons programmables et éclairage RGB.",
+                stock: 3,
+                category: "Souris",
+                image: null
+            },
+            {
+                id: 3,
+                name: "Tapis de Souris XXL",
+                price: 29.99,
+                description: "Tapis de souris gaming extra large avec surface en tissu et base antidérapante.",
+                stock: 0,
+                category: "Accessoires"
+            }
+        ];
+
+        window.loadTestProducts = function () {
+            const container = document.getElementById('products-grid');
+            container.innerHTML = '';
+
+            testProducts.forEach(product => {
+                const card = document.createElement('product-card');
+                card.setAttribute('product-id', product.id);
+                card.setAttribute('product-name', product.name);
+                card.setAttribute('product-price', product.price);
+                card.setAttribute('product-description', product.description);
+                card.setAttribute('product-stock', product.stock);
+                card.setAttribute('product-category', product.category);
+                card.setAttribute('product-url', `/product/${product.id}`);
+                card.setAttribute('is-authenticated', 'true');
+
+                if (product.image) {
+                    card.setAttribute('product-image', product.image);
+                }
+
+                container.appendChild(card);
+            });
+        };
+
+        window.clearProducts = function () {
+            document.getElementById('products-grid').innerHTML = '';
+        };
+
+        // Listen for events
+        document.addEventListener('show-notification', (e) => {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = e.detail.message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        });
+
+        document.addEventListener('cart-updated', (e) => {
+            console.log('Cart updated:', e.detail.cart);
+        });
+    </script>
+</body>
+
+</html>

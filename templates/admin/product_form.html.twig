@@ -110,6 +110,92 @@
             background: #0e112b;
             color: white;
         }
+
+        /* Drag and Drop Zone */
+        .drop-zone {
+            border: 3px dashed #0e112b;
+            border-radius: 11px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: #f8f9fa;
+        }
+
+        .drop-zone.dragover {
+            background: #ddf4ff;
+            border-color: #181e4b;
+            transform: scale(1.02);
+        }
+
+        .drop-zone-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .drop-zone-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .image-preview-item {
+            position: relative;
+            border-radius: 11px;
+            overflow: hidden;
+            border: 3px solid #0e112b;
+            background: #f8f9fa;
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 1;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-delete-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        .image-preview-item.deleting {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        #images {
+            display: none;
+        }
     </style>
 {% endblock %}
 
@@ -118,7 +204,7 @@
     <div class="form-card">
         <h1 class="form-title">{{ product ? 'Modifier' : 'Créer' }} un Produit</h1>
 
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label class="form-label" for="name">Nom du produit *</label>
                 <input 
@@ -139,6 +225,41 @@
                     class="form-textarea" 
                     required
                 >{{ product ? product.description : '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="images">Images du produit (multiple)</label>
+                
+                <!-- Existing images -->
+                <div id="existing-images" class="image-preview-grid">
+                    {% if product and product.medias|length > 0 %}
+                        {% for media in product.medias %}
+                            <div class="image-preview-item" data-media-id="{{ media.id }}">
+                                <img src="{{ asset('uploads/' ~ media.filePath) }}" alt="{{ product.name }}">
+                                <button type="button" class="image-delete-btn" onclick="deleteImage({{ media.id }}, '{{ csrf_token('delete' ~ media.id) }}')">×</button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Drag and drop zone -->
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-zone-icon">📁</div>
+                    <div class="drop-zone-text">
+                        <strong>Glissez-déposez</strong> vos images ici ou <strong>cliquez pour parcourir</strong>
+                    </div>
+                    <small style="color: #999; font-size: 14px;">
+                        Formats acceptés: JPG, PNG, GIF, MP4, WEBM (max 10MB chacun)
+                    </small>
+                </div>
+                
+                <input 
+                    type="file" 
+                    id="images" 
+                    name="images[]" 
+                    accept="image/*,video/*"
+                    multiple
+                >
             </div>
 
             <div class="form-group">
@@ -173,7 +294,7 @@
                 <select id="category_id" name="category_id" class="form-select" required>
                     <option value="">Sélectionnez une catégorie</option>
                     {% for category in categories %}
-                        <option value="{{ category.id }}" {% if product and product.category.id == category.id %}selected{% endif %}>
+                        <option value="{{ category.id }}" {% if product and product.category and product.category.id == category.id %}selected{% endif %}>
                             {{ category.name }}
                         </option>
                     {% endfor %}
@@ -189,4 +310,110 @@
         </form>
     </div>
 </div>
+
+<script>
+// Drag and Drop functionality
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('images');
+
+// Click to open file picker
+dropZone.addEventListener('click', () => {
+    fileInput.click();
+});
+
+// Prevent default drag behaviors
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+    document.body.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+// Highlight drop zone when dragging over it
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => {
+        dropZone.classList.add('dragover');
+    }, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => {
+        dropZone.classList.remove('dragover');
+    }, false);
+});
+
+// Handle dropped files
+dropZone.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    
+    // Assign files to the input
+    fileInput.files = files;
+    
+    // Show preview or feedback
+    updateDropZoneText(files.length);
+}, false);
+
+// Update file input change
+fileInput.addEventListener('change', (e) => {
+    updateDropZoneText(e.target.files.length);
+});
+
+function updateDropZoneText(count) {
+    if (count > 0) {
+        dropZone.querySelector('.drop-zone-text').innerHTML = 
+            `<strong>${count} fichier(s) sélectionné(s)</strong><br>Soumettez le formulaire pour uploader`;
+        dropZone.querySelector('.drop-zone-icon').textContent = '✅';
+    }
+}
+
+// AJAX Image Deletion
+async function deleteImage(mediaId, csrfToken) {
+    if (!confirm('Supprimer cette image ?')) {
+        return;
+    }
+
+    const imageElement = document.querySelector(`[data-media-id="${mediaId}"]`);
+    imageElement.classList.add('deleting');
+
+    try {
+        const formData = new FormData();
+        formData.append('_token', csrfToken);
+
+        const response = await fetch(`{{ path('app_admin_media_delete', {id: '__ID__'}) }}`.replace('__ID__', mediaId), {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            // Animate out and remove
+            imageElement.style.transition = 'all 0.3s';
+            imageElement.style.transform = 'scale(0)';
+            imageElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                imageElement.remove();
+                
+                // Show notification
+                document.dispatchEvent(new CustomEvent('show-notification', {
+                    detail: { message: 'Image supprimée avec succès!' }
+                }));
+            }, 300);
+        } else {
+            imageElement.classList.remove('deleting');
+            alert('Erreur lors de la suppression de l\'image');
+        }
+    } catch (error) {
+        imageElement.classList.remove('deleting');
+        console.error('Error:', error);
+        alert('Erreur lors de la suppression de l\'image');
+    }
+}
+
+// Make function globally available
+window.deleteImage = deleteImage;
+</script>
 {% endblock %}

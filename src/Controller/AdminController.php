@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Entity\Category;
+use App\Entity\Media;
 use App\Repository\CategoryRepository;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
@@ -58,9 +59,30 @@ class AdminController extends AbstractController
             $product->setPrice((float) $request->request->get('price'));
             $product->setStock((int) $request->request->get('stock'));
             
-            $category = $categoryRepository->find($request->request->get('category_id'));
-            if ($category) {
-                $product->setCategory($category);
+            $categoryId = $request->request->get('category_id');
+            if ($categoryId !== null && $categoryId !== '') {
+                $category = $categoryRepository->find((int) $categoryId);
+                if ($category) {
+                    $product->setCategory($category);
+                }
+            }
+
+            // Handle multiple file uploads
+            $uploadedFiles = $request->files->get('images');
+            if ($uploadedFiles) {
+                // If single file, convert to array
+                if (!is_array($uploadedFiles)) {
+                    $uploadedFiles = [$uploadedFiles];
+                }
+
+                foreach ($uploadedFiles as $uploadedFile) {
+                    if ($uploadedFile) {
+                        $media = new Media();
+                        $media->setFile($uploadedFile);
+                        $product->addMedia($media);
+                        $em->persist($media);
+                    }
+                }
             }
 
             $em->persist($product);
@@ -86,9 +108,30 @@ class AdminController extends AbstractController
             $product->setPrice((float) $request->request->get('price'));
             $product->setStock((int) $request->request->get('stock'));
             
-            $category = $categoryRepository->find($request->request->get('category_id'));
-            if ($category) {
-                $product->setCategory($category);
+            $categoryId = $request->request->get('category_id');
+            if ($categoryId !== null && $categoryId !== '') {
+                $category = $categoryRepository->find((int) $categoryId);
+                if ($category) {
+                    $product->setCategory($category);
+                }
+            }
+
+            // Handle multiple file uploads
+            $uploadedFiles = $request->files->get('images');
+            if ($uploadedFiles) {
+                // If single file, convert to array
+                if (!is_array($uploadedFiles)) {
+                    $uploadedFiles = [$uploadedFiles];
+                }
+
+                foreach ($uploadedFiles as $uploadedFile) {
+                    if ($uploadedFile) {
+                        $media = new Media();
+                        $media->setFile($uploadedFile);
+                        $product->addMedia($media);
+                        $em->persist($media);
+                    }
+                }
             }
 
             $em->flush();
@@ -112,6 +155,34 @@ class AdminController extends AbstractController
 
         $this->addFlash('success', 'Product deleted successfully!');
         return $this->redirectToRoute('app_admin_products');
+    }
+
+    #[Route('/media/{id}/delete', name: 'app_admin_media_delete', methods: ['POST'])]
+    public function deleteMedia(Media $media, EntityManagerInterface $em, Request $request): Response
+    {
+        $productId = $media->getProduct()?->getId();
+        
+        // Verify CSRF token
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete' . $media->getId(), $token)) {
+            // Check if it's an AJAX request
+            if ($request->isXmlHttpRequest() || $request->headers->get('Accept') === 'application/json') {
+                return $this->json(['error' => 'Invalid CSRF token'], 400);
+            }
+            $this->addFlash('error', 'Invalid CSRF token');
+            return $this->redirectToRoute('app_admin_product_edit', ['id' => $productId]);
+        }
+
+        $em->remove($media);
+        $em->flush();
+
+        // Check if it's an AJAX request
+        if ($request->isXmlHttpRequest() || $request->headers->get('Accept') === 'application/json') {
+            return $this->json(['success' => true]);
+        }
+
+        $this->addFlash('success', 'Image deleted successfully!');
+        return $this->redirectToRoute('app_admin_product_edit', ['id' => $productId]);
     }
 
     #[Route('/categories', name: 'app_admin_categories')]

@@ -16,7 +16,20 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'webcomponents' => [
+        'path' => './assets/webcomponents.js',
+        'entrypoint' => true,
+    ],
     'gsap' => [
         'version' => '3.13.0',
+    ],
+    'gsap/ScrollTrigger' => [
+        'version' => '3.13.0',
+    ],
+    'swiper' => [
+        'version' => '11.1.15',
+    ],
+    'swiper/bundle' => [
+        'version' => '11.1.15',
     ],
 ];
