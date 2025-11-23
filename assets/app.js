@@ -50,55 +50,198 @@ document.addEventListener("show-notification", (e) => {
 document.addEventListener("cart-updated", () => {
   updateCartDisplay();
 });
-
-// Infinite diagonal scrolling grid for hero section
+// Infinite diagonal scrolling keyboard animation
 function initInfiniteGrid() {
   const gridContainer = document.getElementById("hero-grid");
   if (!gridContainer) return;
 
-  // Image paths using Symfony asset() function - will be set from template
-  const images = [
-    gridContainer.dataset.grosseImage || "/images/grosse_touche.png",
-    gridContainer.dataset.petiteImage || "/images/petite_touche.png",
-  ];
+  // Image paths from data attributes
+  const images = {
+    grosse: gridContainer.dataset.grosseImage || "/images/grosse_touche.png",
+    petite: gridContainer.dataset.petiteImage || "/images/petite_touche.png",
+  };
 
-  // Calculate how many items we need to fill the grid plus duplicates for seamless loop
-  // 3x larger (width) and 2x taller (height)
-  const itemsPerRow = 24;
-  const itemsPerCol = 16;
-  const totalItems = itemsPerRow * itemsPerCol;
+  // Configuration
+  const KEY_SIZES = {
+    small: { width: 180, height: 180 },
+    spacebar: { width: 360, height: 180 },
+  };
 
-  // Populate grid with alternating images
-  for (let i = 0; i < totalItems; i++) {
-    const gridItem = document.createElement("div");
-    gridItem.className = "grid-item";
+  const LINE_SPACING = 500;
+  const KEY_SPACING = 250;
+  const MIN_KEYS_PER_LINE = 10;
+  const Y_OFFSET_BELOW = 500;
+  const Y_OFFSET_ABOVE = 1000;
+  const ANIMATION_SPEED = 1.5;
+  const BUFFER_ZONE = 2000;
+  const OFFSCREEN_BUFFER = 2000;
 
-    // Alternate between grosse and petite touches
-    const imageIndex = i % 2 === 0 ? 0 : 1;
+  const lines = [];
+  const keys = [];
+  let nextLineId = 0;
+  let animationFrame;
+
+  // Create DOM element for a key
+  function createKeyElement(key) {
+    const div = document.createElement("div");
+    div.className = "grid-item";
+    div.style.position = "absolute";
+    div.style.width = key.width + "px";
+    div.style.height = key.height + "px";
+    div.style.willChange = "transform";
+    div.style.pointerEvents = "none";
 
     const img = document.createElement("img");
-    img.src = images[imageIndex];
-    img.alt = imageIndex === 0 ? "Grosse touche" : "Petite touche";
-    img.loading = "lazy";
+    img.src = key.img;
+    img.alt = key.type === "spacebar" ? "Grosse touche" : "Petite touche";
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "contain";
+    img.style.opacity = "0.4";
+    img.style.display = "block";
 
-    gridItem.appendChild(img);
-    gridContainer.appendChild(gridItem);
+    div.appendChild(img);
+    gridContainer.appendChild(div);
+    key.element = div;
   }
 
-  // Simple infinite animation using GSAP timeline
-  // Move by 2 cells diagonally (380px * 3 = 1140px for width pattern)
-  const tl = gsap.timeline({ repeat: -1 });
+  // Create a new diagonal line with keys
+  function createKey(line, offset) {
+    const rand = Math.random();
+    const isSmall = rand < 0.5;
+    const size = isSmall ? KEY_SIZES.small : KEY_SIZES.spacebar;
+    const x = line.x0 + offset;
+    const y = line.baseY - offset;
 
-  tl.to(gridContainer, {
-    x: "+=1140",
-    y: "+=760",
-    duration: 30,
-    ease: "none",
-  }).to(gridContainer, {
-    x: "-=1140",
-    y: "-=760",
-    duration: 0,
+    const key = {
+      lineId: line.id,
+      type: isSmall ? "small" : "spacebar",
+      x,
+      y,
+      width: size.width,
+      height: size.height,
+      img: isSmall ? images.petite : images.grosse,
+      element: null,
+    };
+
+    createKeyElement(key);
+    keys.push(key);
+    line.keyCount += 1;
+  }
+
+  function createLine(x0) {
+    const baseY = gridContainer.offsetHeight + Y_OFFSET_BELOW;
+    const line = { id: nextLineId++, x0, baseY, keyCount: 0 };
+    lines.push(line);
+
+    let offset = 0;
+    const targetY = baseY - Y_OFFSET_ABOVE;
+    while (line.baseY - offset > targetY || line.keyCount < MIN_KEYS_PER_LINE) {
+      createKey(line, offset);
+      offset += KEY_SPACING;
+    }
+  }
+
+  // Initialize the grid with lines
+  function initialize() {
+    // Clear any existing keys
+    lines.forEach((line) => {
+      const remaining = keys.filter((key) => key.lineId === line.id);
+      remaining.forEach((key) => {
+        if (key.element && key.element.parentNode) {
+          gridContainer.removeChild(key.element);
+        }
+      });
+    });
+    lines.length = 0;
+    keys.length = 0;
+
+    // Calculate how many lines we need to cover the screen plus buffer
+    const numLines =
+      Math.ceil((window.innerWidth + BUFFER_ZONE * 2) / LINE_SPACING) + 1;
+    let startX = -BUFFER_ZONE;
+    for (let i = 0; i < numLines; i++) {
+      createLine(startX);
+      startX += LINE_SPACING;
+    }
+
+    console.log(
+      "Initialized with " + keys.length + " keys across " + numLines + " lines"
+    );
+  }
+
+  // Update positions of all keys
+  function updateKeys() {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    lines.forEach((line) => {
+      line.x0 += ANIMATION_SPEED;
+    });
+
+    for (let i = keys.length - 1; i >= 0; i--) {
+      const key = keys[i];
+      key.x += ANIMATION_SPEED;
+      key.y += ANIMATION_SPEED;
+      key.element.style.transform =
+        "translate(" + key.x + "px, " + key.y + "px)";
+
+      const offScreenX = key.x - key.width > screenWidth + OFFSCREEN_BUFFER;
+      const offScreenY = key.y - key.height > screenHeight + OFFSCREEN_BUFFER;
+      if (offScreenX && offScreenY) {
+        if (key.element && key.element.parentNode) {
+          gridContainer.removeChild(key.element);
+        }
+        keys.splice(i, 1);
+        const parentLine = lines.find((line) => line.id === key.lineId);
+        if (parentLine) {
+          parentLine.keyCount -= 1;
+          if (parentLine.keyCount <= 0) {
+            const index = lines.indexOf(parentLine);
+            if (index !== -1) {
+              lines.splice(index, 1);
+            }
+          }
+        }
+      }
+    }
+
+    if (lines.length === 0) {
+      createLine(-BUFFER_ZONE);
+      return;
+    }
+
+    let leftmostX0 = Math.min(...lines.map((line) => line.x0));
+    while (leftmostX0 > -BUFFER_ZONE - LINE_SPACING) {
+      const newX0 = leftmostX0 - LINE_SPACING;
+      createLine(newX0);
+      leftmostX0 = newX0;
+    }
+  }
+
+  // Animation loop
+  function animate() {
+    updateKeys();
+    animationFrame = requestAnimationFrame(animate);
+  }
+
+  // Handle window resize
+  function handleResize() {
+    initialize();
+  }
+
+  window.addEventListener("resize", handleResize);
+
+  // Cleanup
+  window.addEventListener("beforeunload", () => {
+    if (animationFrame) {
+      cancelAnimationFrame(animationFrame);
+    }
   });
+
+  // Start animation
+  initialize();
+  animate();
 }
 
 function initAnimations() {

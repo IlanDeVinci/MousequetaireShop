@@ -33,21 +33,16 @@
 
 .grid-container {
   position: absolute;
-  display: grid;
-  grid-template-columns: repeat(24, 150px);
-  grid-template-rows: repeat(16, 150px);
-  gap: 40px;
-  transform: translate(-1140px, -760px);
+  width: 100%;
+  height: 100%;
+  transform: translate(-1200px, -900px); /* Position initiale ajustée */
   will-change: transform;
 }
 
 .grid-item {
-  width: 100px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.3;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .grid-item img,
