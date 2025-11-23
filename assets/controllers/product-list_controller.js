@@ -12,6 +12,7 @@ export class ProductLoader {
     this.isAuthenticated = document.querySelector(".cart-badge") !== null;
     this.viewMode = localStorage.getItem("productViewMode") || "grid";
     this.allProducts = [];
+    this.existingIds = new Set();
     this.applyViewMode();
     this.cacheInitialProducts();
   }
@@ -26,6 +27,7 @@ export class ProductLoader {
         stock: parseInt(card.getAttribute("product-stock")),
         element: card,
       });
+      this.existingIds.add(card.getAttribute("product-id"));
     });
   }
 
@@ -91,7 +93,7 @@ export class ProductLoader {
     if (this.isLoading || !this.hasMore) return;
 
     this.isLoading = true;
-    this.showLoader();
+    this.showSmallLoader();
 
     try {
       this.currentPage++;
@@ -116,7 +118,7 @@ export class ProductLoader {
       console.error("Error loading products:", error);
     } finally {
       this.isLoading = false;
-      this.hideLoader();
+      this.hideSmallLoader();
     }
   }
 
@@ -137,11 +139,15 @@ export class ProductLoader {
       const data = await response.json();
 
       this.clearProducts();
+
       if (data.products && data.products.length > 0) {
         this.appendProducts(data.products);
+        // Hide load-more for filtered results (filter returns all matching items)
+        this.hideLoadMoreButton();
       } else {
         this.container.innerHTML =
           '<div style="text-align: center; padding: 40px; font-family: Inter, sans-serif; color: #666;">Aucun produit trouvé</div>';
+        this.hideLoadMoreButton();
       }
     } catch (error) {
       console.error("Error filtering products:", error);
@@ -153,8 +159,13 @@ export class ProductLoader {
 
   appendProducts(products) {
     products.forEach((product) => {
+      // Prevent duplicate products already on the page
+      if (this.existingIds.has(String(product.id))) return;
+
       const card = this.createProductCard(product);
       this.container.appendChild(card);
+      this.existingIds.add(String(product.id));
+      this.allProducts.push({ id: String(product.id), element: card });
 
       if (window.gsap) {
         gsap.from(card, {
@@ -196,12 +207,15 @@ export class ProductLoader {
     this.container.innerHTML = "";
     this.currentPage = 1;
     this.hasMore = true;
+    this.existingIds.clear();
   }
 
   showLoader() {
     const loader = document.getElementById("products-loader");
     if (loader) {
       loader.style.display = "flex";
+      // Add loading class to container for additional styling
+      this.container.classList.add("loading");
     }
   }
 
@@ -209,13 +223,37 @@ export class ProductLoader {
     const loader = document.getElementById("products-loader");
     if (loader) {
       loader.style.display = "none";
+      this.container.classList.remove("loading");
+    }
+  }
+
+  showSmallLoader() {
+    const button = document.getElementById("load-more-btn");
+    if (button) {
+      button.disabled = true;
+      button.innerHTML = '<div class="button-spinner"></div> Chargement...';
+    }
+  }
+
+  hideSmallLoader() {
+    const button = document.getElementById("load-more-btn");
+    if (button) {
+      button.disabled = false;
+      button.innerHTML = 'Charger plus de produits';
     }
   }
 
   hideLoadMoreButton() {
-    const button = document.getElementById("load-more-btn");
-    if (button) {
-      button.style.display = "none";
+    const section = document.querySelector(".load-more-section");
+    if (section) {
+      section.style.display = "none";
+    }
+  }
+
+  showLoadMoreButton() {
+    const section = document.querySelector(".load-more-section");
+    if (section) {
+      section.style.display = "block";
     }
   }
 }

@@ -6,6 +6,14 @@ class ProductLoader {
     this.isLoading = false;
     this.hasMore = true;
     this.isAuthenticated = document.querySelector(".cart-badge") !== null;
+    // Track existing product IDs to avoid duplicates
+    this.existingIds = new Set();
+    if (this.container) {
+      const cards = this.container.querySelectorAll("product-card");
+      cards.forEach((card) =>
+        this.existingIds.add(card.getAttribute("product-id"))
+      );
+    }
   }
 
   async loadMore() {
@@ -71,8 +79,11 @@ class ProductLoader {
 
   appendProducts(products) {
     products.forEach((product) => {
+      if (this.existingIds.has(String(product.id))) return;
+
       const card = this.createProductCard(product);
       this.container.appendChild(card);
+      this.existingIds.add(String(product.id));
 
       // Animate the new card
       if (window.gsap) {
@@ -111,6 +122,7 @@ class ProductLoader {
     this.container.innerHTML = "";
     this.currentPage = 1;
     this.hasMore = true;
+    this.existingIds.clear();
   }
 
   showLoader() {

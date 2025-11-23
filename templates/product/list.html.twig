@@ -94,13 +94,16 @@
             {% endfor %}
         </div>
 
-        <!-- Loader -->
-        <div class="products-loader" id="products-loader">
-            <div class="spinner"></div>
+        <!-- Loading Overlay -->
+        <div class="products-loading-overlay" id="products-loader">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p class="loading-text">Chargement des produits...</p>
+            </div>
         </div>
 
         <!-- Load More Button -->
-        <div class="load-more-section">
+        <div class="load-more-section" {% if pages is not defined or pages <= 1 %}style="display: none;"{% endif %}>
             <button class="load-more-btn" id="load-more-btn">
                 Charger plus de produits
             </button>

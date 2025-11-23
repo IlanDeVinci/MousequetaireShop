@@ -17,14 +17,22 @@ class ProductApiController extends AbstractController
         $limit = $request->query->getInt('limit', 12);
         $offset = ($page - 1) * $limit;
 
-        $products = $productRepository->findBy(
-            ['isActive' => true],
-            ['id' => 'DESC'],
-            $limit,
-            $offset
-        );
+        // Use QueryBuilder to ensure isActive is exactly true (not null)
+        $qb = $productRepository->createQueryBuilder('p')
+            ->where('p.isActive = :active')
+            ->setParameter('active', true)
+            ->orderBy('p.id', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset);
 
-        $total = $productRepository->count(['isActive' => true]);
+        $products = $qb->getQuery()->getResult();
+
+        $total = $productRepository->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->where('p.isActive = :active')
+            ->setParameter('active', true)
+            ->getQuery()
+            ->getSingleScalarResult();
 
         $data = array_map(function($product) {
             $image = null;
