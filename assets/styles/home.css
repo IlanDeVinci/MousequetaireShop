@@ -137,7 +137,9 @@
   max-width: 90%;
   max-height: 90%;
   object-fit: contain;
-  filter: drop-shadow(0px 33px 57.8px rgba(0, 0, 0, 0.72));
+  /* Remove heavy lighting/shadow effects for a flat, clean look */
+  filter: none;
+  box-shadow: none;
 }
 
 .shop-button {
