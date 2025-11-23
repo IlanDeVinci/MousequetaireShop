@@ -180,21 +180,7 @@ function initScrollTriggers() {
     });
   }
 
-  // Animate footer on scroll
-  const footer = document.querySelector(".footer");
-  if (footer) {
-    gsap.from(footer, {
-      scrollTrigger: {
-        trigger: footer,
-        start: "top 90%",
-        toggleActions: "play none none reverse",
-      },
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      ease: "power2.out",
-    });
-  }
+  // Footer is always visible - no animation needed
 }
 
 // Cart functionality

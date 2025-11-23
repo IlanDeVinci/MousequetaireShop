@@ -7,7 +7,7 @@
 
 body {
   font-family: "Inter", sans-serif;
-  background: white;
+  background: #0e112b;
   overflow-x: hidden;
 }
 
@@ -110,6 +110,7 @@ body {
   border: none;
   transition: all 0.3s;
   margin-left: auto;
+  margin-right: 10px;
 }
 
 .search-icon-btn:hover {
