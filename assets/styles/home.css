@@ -34,9 +34,10 @@
 .grid-container {
   position: absolute;
   display: grid;
-  grid-template-columns: repeat(12, 150px);
-  grid-template-rows: repeat(12, 150px);
+  grid-template-columns: repeat(24, 150px);
+  grid-template-rows: repeat(16, 150px);
   gap: 40px;
+  transform: translate(-1140px, -760px);
   will-change: transform;
 }
 

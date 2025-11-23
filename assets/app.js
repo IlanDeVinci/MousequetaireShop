@@ -33,9 +33,10 @@ function initInfiniteGrid() {
     gridContainer.dataset.petiteImage || "/images/petite_touche.png",
   ];
 
-  // Calculate how many items we need to fill the grid
-  const itemsPerRow = 12;
-  const itemsPerCol = 12;
+  // Calculate how many items we need to fill the grid plus duplicates for seamless loop
+  // 3x larger (width) and 2x taller (height)
+  const itemsPerRow = 24;
+  const itemsPerCol = 16;
   const totalItems = itemsPerRow * itemsPerCol;
 
   // Populate grid with alternating images
@@ -49,45 +50,25 @@ function initInfiniteGrid() {
     const img = document.createElement("img");
     img.src = images[imageIndex];
     img.alt = imageIndex === 0 ? "Grosse touche" : "Petite touche";
+    img.loading = "lazy";
 
     gridItem.appendChild(img);
     gridContainer.appendChild(gridItem);
   }
 
-  // Calculate grid dimensions
-  const cellSize = 150;
-  const gap = 40;
-  const totalCellSize = cellSize + gap;
+  // Simple infinite animation using GSAP timeline
+  // Move by 2 cells diagonally (380px * 3 = 1140px for width pattern)
+  const tl = gsap.timeline({ repeat: -1 });
 
-  // Position grid to start off-screen top-left
-  const startX = -(totalCellSize * 4);
-  const startY = -(totalCellSize * 4);
-
-  gsap.set(gridContainer, {
-    x: startX,
-    y: startY,
-  });
-
-  // Animate diagonally (down-right) infinitely
-  // Move by exactly the pattern repeat distance for seamless loop
-  const moveDistance = totalCellSize * 2;
-
-  gsap.to(gridContainer, {
-    x: startX + moveDistance,
-    y: startY + moveDistance,
-    duration: 20,
+  tl.to(gridContainer, {
+    x: "+=1140",
+    y: "+=760",
+    duration: 30,
     ease: "none",
-    repeat: -1,
-    modifiers: {
-      x: (x) => {
-        const offset = parseFloat(x) - startX;
-        return startX + (offset % moveDistance);
-      },
-      y: (y) => {
-        const offset = parseFloat(y) - startY;
-        return startY + (offset % moveDistance);
-      },
-    },
+  }).to(gridContainer, {
+    x: "-=1140",
+    y: "-=760",
+    duration: 0,
   });
 }
 
