@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit User - Admin - Mousquetaire Shop{% endblock %}
+
+{% block body %}
+<div class="admin-form-container">
+    <div class="form-card">
+        <h1 class="form-title">Modifier l'utilisateur</h1>
+
+        <form method="POST">
+            <div class="form-group">
+                <label class="form-label" for="email">Email *</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input" 
+                    value="{{ user.email }}" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="first_name">Prénom</label>
+                <input 
+                    type="text" 
+                    id="first_name" 
+                    name="first_name" 
+                    class="form-input" 
+                    value="{{ user.firstName ?? '' }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="last_name">Nom</label>
+                <input 
+                    type="text" 
+                    id="last_name" 
+                    name="last_name" 
+                    class="form-input" 
+                    value="{{ user.lastName ?? '' }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Rôles</label>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                    <label style="display: flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 16px;">
+                        <input 
+                            type="checkbox" 
+                            name="roles[]" 
+                            value="ROLE_USER" 
+                            {% if 'ROLE_USER' in user.roles %}checked{% endif %}
+                            style="width: 20px; height: 20px;"
+                        >
+                        <span>ROLE_USER</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 16px;">
+                        <input 
+                            type="checkbox" 
+                            name="roles[]" 
+                            value="ROLE_ADMIN" 
+                            {% if 'ROLE_ADMIN' in user.roles %}checked{% endif %}
+                            style="width: 20px; height: 20px;"
+                        >
+                        <span>ROLE_ADMIN</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="new_password">Nouveau mot de passe</label>
+                <input 
+                    type="password" 
+                    id="new_password" 
+                    name="new_password" 
+                    class="form-input" 
+                    minlength="6"
+                >
+                <small style="color: #666; font-size: 14px; margin-top: 5px; display: block;">
+                    Laissez vide pour ne pas changer le mot de passe. Minimum 6 caractères.
+                </small>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">💾 Enregistrer</button>
+                <a href="{{ path('app_admin_users') }}" class="btn-cancel">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

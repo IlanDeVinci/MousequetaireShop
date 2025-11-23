@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Profile - Mousquetaire Shop{% endblock %}
+
+{% block body %}
+<div class="account-page">
+    <div class="container">
+        <div class="page-header">
+            <h1>Modifier mon profil</h1>
+        </div>
+
+        <div class="form-card">
+            <form method="POST">
+                <div class="form-group">
+                    <label class="form-label" for="first_name">Prénom</label>
+                    <input 
+                        type="text" 
+                        id="first_name" 
+                        name="first_name" 
+                        class="form-input" 
+                        value="{{ app.user.firstName ?? '' }}"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="last_name">Nom</label>
+                    <input 
+                        type="text" 
+                        id="last_name" 
+                        name="last_name" 
+                        class="form-input" 
+                        value="{{ app.user.lastName ?? '' }}"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email *</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        value="{{ app.user.email }}" 
+                        required
+                    >
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">💾 Enregistrer</button>
+                    <a href="{{ path('app_account') }}" class="btn-cancel">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

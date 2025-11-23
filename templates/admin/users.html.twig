@@ -40,7 +40,7 @@
                             <td>{{ user.roles|join(', ') }}</td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="#" class="btn-edit">✏️ Edit</a>
+                                    <a href="{{ path('app_admin_user_edit', {id: user.id}) }}" class="btn-edit">✏️ Edit</a>
                                     <form method="POST" action="{{ path('app_admin_user_delete', {id: user.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Leurs commandes seront préservées.');">
                                         <button type="submit" class="btn-delete">🗑️ Supprimer</button>
                                     </form>

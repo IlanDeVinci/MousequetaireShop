@@ -373,6 +373,19 @@
   display: none;
 }
 
+.banner-preview {
+  margin-top: 15px;
+  padding: 15px 25px;
+  background: #181e4b;
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 11px;
+  text-align: center;
+  border: 3px solid #0e112b;
+}
+
 /* Admin table/list styles used by admin listing templates */
 .admin-table-container {
   background: white;

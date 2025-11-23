@@ -71,10 +71,10 @@ function initInfiniteGrid() {
   const KEY_SPACING = 250;
   const MIN_KEYS_PER_LINE = 10;
   const Y_OFFSET_BELOW = 500;
-  const Y_OFFSET_ABOVE = 1000;
+  const Y_OFFSET_ABOVE = 500;
   const ANIMATION_SPEED = 1.5;
-  const BUFFER_ZONE = 2000;
-  const OFFSCREEN_BUFFER = 2000;
+  const BUFFER_ZONE = 500;
+  const OFFSCREEN_BUFFER = 1000;
 
   const lines = [];
   const keys = [];
@@ -212,7 +212,7 @@ function initInfiniteGrid() {
     }
 
     let leftmostX0 = Math.min(...lines.map((line) => line.x0));
-    while (leftmostX0 > -BUFFER_ZONE - LINE_SPACING) {
+    while (leftmostX0 > -BUFFER_ZONE / 2 - LINE_SPACING) {
       const newX0 = leftmostX0 - LINE_SPACING;
       createLine(newX0);
       leftmostX0 = newX0;

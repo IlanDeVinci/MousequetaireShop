@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -309,6 +310,48 @@ class AdminController extends AbstractController
         }
 
         return $this->redirectToRoute('app_admin_users');
+    }
+
+    #[Route('/users/{id}/edit', name: 'app_admin_user_edit')]
+    public function editUser(\App\Entity\User $user, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        if ($request->isMethod('POST')) {
+            $email = $request->request->get('email');
+            $firstName = $request->request->get('first_name');
+            $lastName = $request->request->get('last_name');
+            $roles = $request->request->get('roles', []);
+            $newPassword = $request->request->get('new_password');
+
+            if ($email) {
+                $user->setEmail($email);
+            }
+            if ($firstName !== null) {
+                $user->setFirstName($firstName);
+            }
+            if ($lastName !== null) {
+                $user->setLastName($lastName);
+            }
+
+            // Update roles
+            if (is_array($roles)) {
+                $user->setRoles($roles);
+            }
+
+            // Update password if provided
+            if ($newPassword && strlen($newPassword) >= 6) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+                $user->setPassword($hashedPassword);
+            }
+
+            $em->flush();
+
+            $this->addFlash('success', 'User updated successfully!');
+            return $this->redirectToRoute('app_admin_users');
+        }
+
+        return $this->render('admin/user_form.html.twig', [
+            'user' => $user,
+        ]);
     }
 
     #[Route('/banner/edit', name: 'app_admin_banner_edit')]

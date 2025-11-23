@@ -11,9 +11,28 @@
 
         <div class="account-container">
             <div class="account-section">
-                <h2>Informations du compte</h2>
+                <div class="section-header">
+                    <h2>Informations du compte</h2>
+                    <a href="{{ path('app_account_edit') }}" class="btn-edit-small">✏️ Modifier</a>
+                </div>
                 <div class="account-info">
                     <p><strong>Email:</strong> {{ app.user.email }}</p>
+                    {% if app.user.firstName %}
+                        <p><strong>Prénom:</strong> {{ app.user.firstName }}</p>
+                    {% endif %}
+                    {% if app.user.lastName %}
+                        <p><strong>Nom:</strong> {{ app.user.lastName }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="account-section">
+                <div class="section-header">
+                    <h2>Sécurité</h2>
+                    <a href="{{ path('app_account_password') }}" class="btn-edit-small">🔒 Changer le mot de passe</a>
+                </div>
+                <div class="account-info">
+                    <p><strong>Mot de passe:</strong> ••••••••</p>
                 </div>
             </div>
 
