@@ -59,6 +59,62 @@
   margin-bottom: 40px;
 }
 
+/* Table toolbar and search */
+.admin-table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-search {
+  flex: 1;
+  padding: 10px 14px;
+  border: 2px solid #0e112b;
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.admin-search:focus {
+  box-shadow: 0 2px 6px rgba(14, 17, 43, 0.08);
+}
+
+.admin-table-toolbar .admin-clear-search {
+  background: transparent;
+  border: none;
+  color: #0e112b;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Sortable headers */
+.admin-table thead th.sortable-header {
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.admin-table thead th.sortable-header::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-top-color: transparent;
+}
+
+.admin-table thead th.sortable-header.sort-asc::after {
+  border-bottom-color: #0e112b;
+}
+
+.admin-table thead th.sortable-header.sort-desc::after {
+  border-top-color: #0e112b;
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -96,4 +152,300 @@
   font-weight: 700;
   font-size: 36px;
   color: #0e112b;
+}
+
+/* Admin form and media preview styles (moved from inline templates) */
+.admin-form-container {
+  background: #bce9ff;
+  min-height: calc(100vh - 200px);
+  padding: 60px 50px;
+}
+
+.form-card {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border: 5px solid #0e112b;
+  border-radius: 22px;
+  padding: 40px;
+}
+
+.form-title {
+  font-family: "Oxanium", sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  color: #0e112b;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-label {
+  display: block;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #0e112b;
+  margin-bottom: 8px;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 3px solid #0e112b;
+  border-radius: 11px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #181e4b;
+  box-shadow: 0 0 0 3px rgba(14, 17, 43, 0.1);
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn-submit {
+  flex: 1;
+  background: #0e112b;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 11px;
+  font-family: "Oxanium", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-create {
+  background: #0e112b;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 11px;
+  font-family: "Oxanium", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-create:hover {
+  background: #181e4b;
+  transform: scale(1.02);
+}
+
+.btn-submit:hover {
+  background: #181e4b;
+  transform: scale(1.02);
+}
+
+.btn-cancel {
+  background: transparent;
+  color: #0e112b;
+  border: 3px solid #0e112b;
+  padding: 15px 30px;
+  border-radius: 11px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-cancel:hover {
+  background: #0e112b;
+  color: white;
+}
+
+.drop-zone {
+  border: 3px dashed #0e112b;
+  border-radius: 11px;
+  padding: 40px;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  background: #f8f9fa;
+}
+
+.drop-zone.dragover {
+  background: #ddf4ff;
+  border-color: #181e4b;
+  transform: scale(1.02);
+}
+
+.drop-zone-text {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.drop-zone-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.image-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.image-preview-item {
+  position: relative;
+  border-radius: 11px;
+  overflow: hidden;
+  border: 3px solid #0e112b;
+  background: #f8f9fa;
+}
+
+.image-preview-item img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+.image-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 1;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.image-delete-btn:hover {
+  background: #dc2626;
+  transform: scale(1.1);
+}
+
+.image-preview-item.deleting {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+#images {
+  display: none;
+}
+
+/* Admin table/list styles used by admin listing templates */
+.admin-table-container {
+  background: white;
+  border: 5px solid #0e112b;
+  border-radius: 22px;
+  padding: 20px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table thead {
+  background: #ddf4ff;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 12px 15px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  color: #0e112b;
+}
+
+.admin-table th {
+  padding: 20px;
+  text-align: left;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #0e112b;
+  border-bottom: 3px solid #0e112b;
+}
+
+.admin-table td {
+  padding: 18px 20px;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  color: #333;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background: #3b82f6; /* blue variant used by listing templates */
+  color: white;
+  border: none;
+}
+
+.btn-edit:hover {
+  background: #2563eb;
+}
+
+.btn-delete {
+  background: #ef4444;
+  color: white;
+  border: none;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px;
 }

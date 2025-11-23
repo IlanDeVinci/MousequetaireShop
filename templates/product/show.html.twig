@@ -6,11 +6,54 @@
 <div class="product-detail-page">
     <div class="container">
         <div class="product-detail">
-            <div class="product-detail-image">
-                {% if product.media and product.media.filePath %}
-                    <img src="{{ asset('uploads/' ~ product.media.filePath) }}" alt="{{ product.name }}">
+            <div class="product-detail-gallery">
+                {% if product.medias|length > 0 %}
+                    <div class="gallery-images-grid">
+                        {% for media in product.medias %}
+                            <div class="gallery-image-item gallery-image-{{ loop.index }}">
+                                {% if media.filePath ends with '.mp4' or media.filePath ends with '.webm' %}
+                                    <video controls loop muted>
+                                        <source src="{{ asset('uploads/' ~ media.filePath) }}" type="video/{{ media.filePath|split('.')|last }}">
+                                    </video>
+                                {% else %}
+                                    <img src="{{ asset('uploads/' ~ media.filePath) }}" alt="{{ product.name }} - Image {{ loop.index }}">
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {# Mobile slider - shown only on mobile #}
+                    <div class="gallery-slider">
+                        <button class="slider-btn slider-prev" aria-label="Previous image">‹</button>
+                        <button class="slider-btn slider-next" aria-label="Next image">›</button>
+                        {% for media in product.medias %}
+                            <div class="slider-item">
+                                {% if media.filePath ends with '.mp4' or media.filePath ends with '.webm' %}
+                                    <video controls loop muted>
+                                        <source src="{{ asset('uploads/' ~ media.filePath) }}" type="video/{{ media.filePath|split('.')|last }}">
+                                    </video>
+                                {% else %}
+                                    <img src="{{ asset('uploads/' ~ media.filePath) }}" alt="{{ product.name }} - Image {{ loop.index }}">
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <div class="slider-dots">
+                            {% for media in product.medias %}
+                                <span class="dot {% if loop.first %}active{% endif %}" data-index="{{ loop.index0 }}"></span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% elseif product.media and product.media.filePath %}
+                    <div class="gallery-images-grid">
+                        <div class="gallery-image-item gallery-image-1">
+                            <img src="{{ asset('uploads/' ~ product.media.filePath) }}" alt="{{ product.name }}">
+                        </div>
+                    </div>
                 {% else %}
-                    <div class="product-placeholder-large">⌨️</div>
+                    <div class="gallery-images-grid">
+                        <div class="gallery-image-item gallery-image-1">
+                            <div class="product-placeholder-large">⌨️</div>
+                        </div>
+                    </div>
                 {% endif %}
             </div>
             <div class="product-detail-info">
@@ -29,16 +72,19 @@
                             <span class="stock-badge out">✗ Rupture de stock</span>
                         {% endif %}
                     </p>
-                    {% if product.category %}
-                        <p><strong>Catégorie:</strong> {{ product.category.name }}</p>
-                    {% endif %}
+                    <p><strong>Catégorie:</strong> {{ product.category ? product.category.name : 'Non catégorisé' }}</p>
                 </div>
                 
                 <div class="product-actions">
                     {% if is_granted('ROLE_USER') %}
                         {% if product.stock > 0 %}
+                            <div class="quantity-selector">
+                                <button type="button" class="qty-btn" id="qty-minus">−</button>
+                                <input type="number" id="qty-input" value="1" min="1" max="{{ product.stock }}" class="qty-input">
+                                <button type="button" class="qty-btn" id="qty-plus">+</button>
+                            </div>
                             <button class="btn btn-large"
-                                    data-add-to-cart
+                                    id="add-to-cart-btn"
                                     data-product-id="{{ product.id }}"
                                     data-product-name="{{ product.name }}"
                                     data-product-price="{{ product.price }}">

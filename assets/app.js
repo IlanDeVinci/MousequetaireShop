@@ -10,7 +10,36 @@ document.addEventListener("DOMContentLoaded", () => {
   initAnimations();
   initCart();
   initScrollTriggers();
+  // Dispatch flash notifications from server-side rendered data
+  try {
+    const flashesEl = document.getElementById("flashes-data");
+    if (flashesEl) {
+      const data = JSON.parse(flashesEl.textContent || "{}");
+      (data.success || []).forEach((m) =>
+        document.dispatchEvent(
+          new CustomEvent("show-notification", { detail: { message: m } })
+        )
+      );
+      (data.error || []).forEach((m) =>
+        document.dispatchEvent(
+          new CustomEvent("show-notification", { detail: { message: m } })
+        )
+      );
+    }
+  } catch (e) {
+    console.error("Failed to parse flash messages", e);
+  }
 });
+
+// Import admin-specific form behaviors (drag/drop, delete image, banner preview)
+import "./js/admin-forms.js";
+import "./js/admin-tables.js";
+import { initProductDetail } from "./js/product-detail.js";
+
+// Initialize product detail page if on product page
+if (document.querySelector(".product-detail-page")) {
+  document.addEventListener("DOMContentLoaded", initProductDetail);
+}
 
 // Listen for notification events from web components
 document.addEventListener("show-notification", (e) => {
@@ -108,6 +137,7 @@ function initAnimations() {
       stagger: 0.1,
       duration: 0.6,
       ease: "power2.out",
+      clearProps: "all",
     });
   }
 }
@@ -284,3 +314,15 @@ function showNotification(message) {
 window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;
 window.updateQuantity = updateQuantity;
+
+// Hide page loader when the page has fully loaded (moved from base template)
+window.addEventListener("load", function () {
+  const loader = document.getElementById("page-loader");
+  if (!loader) return;
+  loader.classList.add("loaded");
+  setTimeout(() => {
+    try {
+      loader.remove();
+    } catch (e) {}
+  }, 300);
+});

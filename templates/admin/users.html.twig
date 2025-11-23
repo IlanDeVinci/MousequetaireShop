@@ -3,7 +3,8 @@
 {% block title %}Admin - Users - Mousquetaire Shop{% endblock %}
 
 {% block body %}
-<div class="admin-layout">
+<div class="admin-page">
+    <div class="admin-layout">
     <aside class="admin-sidebar">
         <h2>Admin Panel</h2>
         <nav class="admin-nav">
@@ -12,12 +13,13 @@
             <a href="{{ path('app_admin_categories') }}" class="admin-nav-link">Categories</a>
             <a href="{{ path('app_admin_orders') }}" class="admin-nav-link">Orders</a>
             <a href="{{ path('app_admin_users') }}" class="admin-nav-link active">Users</a>
+            <a href="{{ path('app_admin_banner_edit') }}" class="admin-nav-link">🎨 Bandeau</a>
         </nav>
     </aside>
 
     <main class="admin-content">
         <div class="admin-header">
-            <h1>Users Management</h1>
+            <h1 class="admin-title">Users Management</h1>
         </div>
 
         <div class="admin-table-container">
@@ -37,7 +39,12 @@
                             <td>{{ user.email }}</td>
                             <td>{{ user.roles|join(', ') }}</td>
                             <td>
-                                <a href="#" class="btn-link">Edit</a>
+                                <div class="action-buttons">
+                                    <a href="#" class="btn-edit">✏️ Edit</a>
+                                    <form method="POST" action="{{ path('app_admin_user_delete', {id: user.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Leurs commandes seront préservées.');">
+                                        <button type="submit" class="btn-delete">🗑️ Supprimer</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     {% else %}
@@ -49,5 +56,6 @@
             </table>
         </div>
     </main>
+    </div>
 </div>
 {% endblock %}

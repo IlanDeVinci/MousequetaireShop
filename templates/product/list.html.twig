@@ -81,7 +81,7 @@
                     product-price="{{ product.price }}"
                     product-description="{{ product.description }}"
                     product-stock="{{ product.stock }}"
-                    product-category="{{ product.category.name }}"
+                    product-category="{{ product.category ? product.category.name : 'Non catégorisé' }}"
                     {% if product.medias|length > 0 %}
                     product-images='{{ product.medias|map(m => asset('uploads/' ~ m.filePath))|json_encode|raw }}'
                     product-image="{{ asset('uploads/' ~ product.medias.first.filePath) }}"

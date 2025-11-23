@@ -239,8 +239,24 @@ class SearchModal extends HTMLElement {
           font-weight: 600;
         }
 
+        .empty-state {
+          padding: 60px 20px;
+          text-align: center;
+          font-family: 'Inter', sans-serif;
+          color: #666;
+        }
+
+        .empty-state-icon {
+          font-size: 60px;
+          margin-bottom: 15px;
+        }
+
+        .empty-state-text {
+          font-size: 16px;
+        }
+
         .loading {
-          padding: 40px;
+          padding: 40px 20px;
           text-align: center;
           font-family: 'Inter', sans-serif;
           color: #666;
@@ -252,29 +268,13 @@ class SearchModal extends HTMLElement {
 
         .spinner {
           display: inline-block;
-          width: 40px;
-          height: 40px;
+          width: 30px;
+          height: 30px;
           border: 4px solid #f3f3f3;
           border-top: 4px solid #0e112b;
           border-radius: 50%;
           animation: spin 1s linear infinite;
           margin-bottom: 15px;
-        }
-
-        .empty-state {
-          padding: 60px 20px;
-          text-align: center;
-          font-family: 'Inter', sans-serif;
-          color: #999;
-        }
-
-        .empty-state-icon {
-          font-size: 60px;
-          margin-bottom: 15px;
-        }
-
-        .empty-state-text {
-          font-size: 16px;
         }
       </style>
 

@@ -150,10 +150,16 @@ class AdminController extends AbstractController
     #[Route('/products/{id}/delete', name: 'app_admin_product_delete', methods: ['POST'])]
     public function deleteProduct(Product $product, EntityManagerInterface $em): Response
     {
-        $em->remove($product);
-        $em->flush();
+        try {
+            $em->remove($product);
+            $em->flush();
+            $this->addFlash('success', 'Product deleted successfully!');
+        } catch (\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException $e) {
+            $this->addFlash('error', 'Cannot delete this product because it is referenced by orders or other records.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'An error occurred while deleting the product.');
+        }
 
-        $this->addFlash('success', 'Product deleted successfully!');
         return $this->redirectToRoute('app_admin_products');
     }
 
@@ -234,12 +240,28 @@ class AdminController extends AbstractController
     }
 
     #[Route('/categories/{id}/delete', name: 'app_admin_category_delete', methods: ['POST'])]
-    public function deleteCategory(Category $category, EntityManagerInterface $em): Response
+    public function deleteCategory(Category $category, EntityManagerInterface $em, ProductRepository $productRepository): Response
     {
-        $em->remove($category);
-        $em->flush();
+        try {
+            // Reassign all products in this category to null (no category)
+            $products = $productRepository->findBy(['category' => $category]);
+            foreach ($products as $product) {
+                $product->setCategory(null);
+            }
+            
+            $em->remove($category);
+            $em->flush();
+            
+            $productCount = count($products);
+            if ($productCount > 0) {
+                $this->addFlash('success', "Category deleted successfully! {$productCount} product(s) were reassigned to no category.");
+            } else {
+                $this->addFlash('success', 'Category deleted successfully!');
+            }
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'An error occurred while deleting the category.');
+        }
 
-        $this->addFlash('success', 'Category deleted successfully!');
         return $this->redirectToRoute('app_admin_categories');
     }
 
@@ -261,6 +283,32 @@ class AdminController extends AbstractController
         return $this->render('admin/users.html.twig', [
             'users' => $users,
         ]);
+    }
+
+    #[Route('/users/{id}/delete', name: 'app_admin_user_delete', methods: ['POST'])]
+    public function deleteUser(\App\Entity\User $user, EntityManagerInterface $em, OrderRepository $orderRepository): Response
+    {
+        try {
+            // Unlink user from their orders (keep order details intact)
+            $orders = $orderRepository->findBy(['user' => $user]);
+            foreach ($orders as $order) {
+                $order->setUser(null);
+            }
+            
+            $em->remove($user);
+            $em->flush();
+            
+            $orderCount = count($orders);
+            if ($orderCount > 0) {
+                $this->addFlash('success', "User deleted successfully! {$orderCount} order(s) were preserved with their details.");
+            } else {
+                $this->addFlash('success', 'User deleted successfully!');
+            }
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'An error occurred while deleting the user.');
+        }
+
+        return $this->redirectToRoute('app_admin_users');
     }
 
     #[Route('/banner/edit', name: 'app_admin_banner_edit')]

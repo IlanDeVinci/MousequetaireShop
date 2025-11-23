@@ -225,11 +225,22 @@ class ProductCard extends HTMLElement {
           height: 100%;
           display: flex;
           flex-direction: ${isFullWidth ? "row" : "column"};
+          cursor: pointer;
+          position: relative;
         }
 
         .product-card:hover {
           transform: translateY(-10px);
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-link-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
         }
 
         .product-image {
@@ -240,7 +251,6 @@ class ProductCard extends HTMLElement {
           align-items: center;
           justify-content: center;
           font-size: 80px;
-          padding: 20px;
           overflow: hidden;
           position: relative;
           flex-shrink: 0;
@@ -266,6 +276,8 @@ class ProductCard extends HTMLElement {
         .swiper {
           width: 100%;
           height: 100%;
+          position: relative;
+          z-index: 2;
         }
 
         .swiper-slide {
@@ -282,6 +294,7 @@ class ProductCard extends HTMLElement {
 
         .swiper-pagination {
           bottom: 10px !important;
+          z-index: 3;
         }
 
         .swiper-pagination-bullet {
@@ -302,6 +315,7 @@ class ProductCard extends HTMLElement {
           height: 40px;
           border-radius: 50%;
           transition: all 0.3s;
+          z-index: 3;
         }
 
         .swiper-button-prev:hover,
@@ -391,6 +405,8 @@ class ProductCard extends HTMLElement {
           display: flex;
           gap: 10px;
           ${isFullWidth ? "flex-wrap: wrap;" : ""}
+          position: relative;
+          z-index: 2;
         }
 
         .add-to-cart-btn {
@@ -438,6 +454,9 @@ class ProductCard extends HTMLElement {
       </style>
 
       <div class="product-card">
+        <a href="${
+          this.productUrl
+        }" class="card-link-overlay" aria-label="View ${this.productName}"></a>
         <div class="product-image">
           ${imageHTML}
         </div>
@@ -460,9 +479,6 @@ class ProductCard extends HTMLElement {
           
           <div class="product-actions">
             ${addToCartButton}
-            <a href="${this.productUrl}" class="view-details-btn">
-              Détails
-            </a>
           </div>
         </div>
       </div>

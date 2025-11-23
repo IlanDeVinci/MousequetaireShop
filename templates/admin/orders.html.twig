@@ -3,7 +3,8 @@
 {% block title %}Admin - Orders - Mousquetaire Shop{% endblock %}
 
 {% block body %}
-<div class="admin-layout">
+<div class="admin-page">
+    <div class="admin-layout">
     <aside class="admin-sidebar">
         <h2>Admin Panel</h2>
         <nav class="admin-nav">
@@ -12,12 +13,13 @@
             <a href="{{ path('app_admin_categories') }}" class="admin-nav-link">Categories</a>
             <a href="{{ path('app_admin_orders') }}" class="admin-nav-link active">Orders</a>
             <a href="{{ path('app_admin_users') }}" class="admin-nav-link">Users</a>
+            <a href="{{ path('app_admin_banner_edit') }}" class="admin-nav-link">🎨 Bandeau</a>
         </nav>
     </aside>
 
     <main class="admin-content">
         <div class="admin-header">
-            <h1>Orders Management</h1>
+            <h1 class="admin-title">Orders Management</h1>
         </div>
 
         <div class="admin-table-container">
@@ -53,5 +55,6 @@
             </table>
         </div>
     </main>
+    </div>
 </div>
 {% endblock %}
