@@ -72,7 +72,7 @@ function initInfiniteGrid() {
   const MIN_KEYS_PER_LINE = 10;
   const Y_OFFSET_BELOW = 500;
   const Y_OFFSET_ABOVE = 500;
-  const ANIMATION_SPEED = 1.5;
+  const ANIMATION_SPEED = 1;
   const BUFFER_ZONE = 500;
   const OFFSCREEN_BUFFER = 1000;
 

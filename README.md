@@ -44,7 +44,7 @@ MousequetaireShop/
 
 ## Getting Started
 
-> Docker Compose only builds and launches the containers. The commands below (Composer install, key generation, migrations, fixtures) are **not** executed automatically; run them manually after the stack is up.
+> **Automated Setup**: The Docker containers now automatically install Composer dependencies and warm up the cache on first boot. You only need to generate JWT keys and run database migrations manually.
 
 1. **Clone the repo**
 
@@ -70,32 +70,33 @@ MousequetaireShop/
    docker compose up -d
    ```
 
-4. **Install dependencies**
+   The PHP container will automatically:
 
-   ```bash
-   docker compose exec php composer install
-   ```
+   - Wait for the database to be ready
+   - Install Composer dependencies if `vendor/autoload.php` doesn't exist
+   - Warm up Symfony cache if not present
+   - Set proper file permissions
 
-5. **Generate JWT keys**
+4. **Generate JWT keys**
 
    ```bash
    docker compose exec php php bin/console lexik:jwt:generate-keypair
    ```
 
-6. **Create database & run migrations**
+5. **Create database & run migrations**
 
    ```bash
    docker compose exec php php bin/console doctrine:database:create --if-not-exists
    docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
    ```
 
-7. **Load demo fixtures (optional)**
+6. **Load demo fixtures (optional)**
 
    ```bash
    docker compose exec php php bin/console doctrine:fixtures:load --no-interaction
    ```
 
-8. **Open the app**
+7. **Open the app**
 
    - Storefront: [http://localhost:8080](http://localhost:8080)
    - API docs: [http://localhost:8080/api/docs](http://localhost:8080/api/docs)
