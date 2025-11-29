@@ -1,6 +1,6 @@
 # Mousquetaire Shop
 
-Mousquetaire Shop is a Docker-first Symfony 7.2 build that exposes an API Platform backend, PostgreSQL 16 database, and a GSAP-animated storefront. Everything runs in containers, but Composer installs, migrations, and fixtures remain manual so you stay in control of the workflow.
+Mousquetaire Shop is a Docker-first Symfony 7.2 build that exposes an API Platform backend, PostgreSQL 16 database, and a GSAP-animated storefront. Everything runs in containers, but Composer installs, migrations, and fixtures remain manual.
 
 ---
 
@@ -10,8 +10,6 @@ Mousquetaire Shop is a Docker-first Symfony 7.2 build that exposes an API Platfo
 - **Admin & operations** – CRUD for products, categories, orders, users, plus a banner editor to tweak the hero message without redeploying.
 - **API & security** – `/api/docs` via API Platform, JWT login handled by the Lexik bundle, ROLE_USER vs ROLE_ADMIN policies, and custom state processors on write endpoints.
 - **UX polish** – `<product-card>` and `<search-bar>` Web Components, debounced search endpoint, GSAP ScrollTrigger animations on every public section.
-
-Recent fixes (22 Nov 2025) restored ES module MIME types, made add-to-cart reliable everywhere, improved image loading, and refreshed footer colors. See `CORRECTIONS_22NOV2025.md` for details.
 
 ---
 
@@ -44,7 +42,7 @@ MousequetaireShop/
 
 ## Getting Started
 
-> **Automated Setup**: The Docker containers now automatically install Composer dependencies and warm up the cache on first boot. You only need to generate JWT keys and run database migrations manually.
+> **Automated Setup**: The Docker containers automatically install Composer dependencies and warm up the cache on first boot. You only need to generate JWT keys and run database migrations manually.
 
 1. **Clone the repo**
 
@@ -102,7 +100,7 @@ MousequetaireShop/
    - API docs: [http://localhost:8080/api/docs](http://localhost:8080/api/docs)
    - Mailpit: [http://localhost:8025](http://localhost:8025)
 
-Shut everything down later with `docker compose down`.
+Shut everything down with `docker compose down`.
 
 ---
 
@@ -110,7 +108,7 @@ Shut everything down later with `docker compose down`.
 
 - Admin: `admin@shop.com` / `admin123`
 - Client: `client@shop.com` / `client123`
-- Fixtures seed 5 categories, 14 products with images, and sample orders so the UI looks alive immediately.
+- Fixtures seed categories and products so the UI looks alive immediately.
 
 ---
 
@@ -150,6 +148,5 @@ docker compose exec php sh
 - **Port already in use** – Edit `compose.yaml` and change the `8080:80` mapping on the `nginx` service.
 - **Missing JWT keys** – Re-run `lexik:jwt:generate-keypair` inside the PHP container.
 - **Cache or log bloat** – `docker compose exec php sh -c "rm -rf var/cache/* var/log/*"` then `docker compose exec php php bin/console cache:clear`.
-- **Linux/Mac permissions** – `sudo chown -R $(id -u):$(id -g) .` before building.
 
 ---
